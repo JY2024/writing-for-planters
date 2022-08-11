@@ -1,13 +1,14 @@
 import sys
+
 import collapsableBox
 
 from PyQt5.QtCore import (
     QSize, QPropertyAnimation, QParallelAnimationGroup
 )
+from PyQt5 import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton,
-    QTextEdit
+    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea
 )
 
 
@@ -15,15 +16,18 @@ from PyQt5.QtWidgets import (
 class WritingWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.lineEdit = QLineEdit()
+        self.groupBox = QGroupBox()
+        self.main_layout = QVBoxLayout()
+
         self.resize(QSize(1000, 700))
         self.setMaximumSize(QSize(1000, 700))
         # Set the window title according to the work title
 
         # Outline layout
         outline_layout = QHBoxLayout()
-        self.lineEdit = QLineEdit() # START HERE
         self.lineEdit.setMaximumSize(QSize(500, 100))
-        self.groupBox = QGroupBox()
         self.groupBoxLayout = QVBoxLayout()
         self.groupBox.setLayout(self.groupBoxLayout)
         self.groupBox.setMaximumSize(QSize(500, 500))
@@ -31,7 +35,6 @@ class WritingWindow(QMainWindow):
         outline_layout.addWidget(self.groupBox) # for buttons
 
         # Main Layout
-        self.main_layout = QVBoxLayout()
         outline_label = QLabel("Outline")
         font = QFont()
         font.setPointSize(20)
@@ -48,7 +51,10 @@ class WritingWindow(QMainWindow):
         # Finish layout set up
         widget = QWidget()
         widget.setLayout(self.main_layout)
-        self.setCentralWidget(widget)
+        scroll = QScrollArea()
+        scroll.setWidget(widget)
+        scroll.setWidgetResizable(True)
+        self.setCentralWidget(scroll)
 
         # Connect signals
         button.clicked.connect(self.button_was_clicked)
