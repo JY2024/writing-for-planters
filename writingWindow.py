@@ -1,10 +1,13 @@
 import sys
+import collapsableBox
+
 from PyQt5.QtCore import (
-    QSize, Qt
+    QSize, QPropertyAnimation, QParallelAnimationGroup
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton
+    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton,
+    QTextEdit
 )
 
 
@@ -28,7 +31,7 @@ class WritingWindow(QMainWindow):
         outline_layout.addWidget(self.groupBox) # for buttons
 
         # Main Layout
-        main_layout = QVBoxLayout()
+        self.main_layout = QVBoxLayout()
         outline_label = QLabel("Outline")
         font = QFont()
         font.setPointSize(20)
@@ -38,13 +41,13 @@ class WritingWindow(QMainWindow):
         button = QPushButton("Enter")
         button.setMaximumSize(QSize(100, 30))
 
-        main_layout.addWidget(outline_label)
-        main_layout.addLayout(outline_layout)
-        main_layout.addWidget(button)
+        self.main_layout.addWidget(outline_label)
+        self.main_layout.addLayout(outline_layout)
+        self.main_layout.addWidget(button)
 
         # Finish layout set up
         widget = QWidget()
-        widget.setLayout(main_layout)
+        widget.setLayout(self.main_layout)
         self.setCentralWidget(widget)
 
         # Connect signals
@@ -54,3 +57,6 @@ class WritingWindow(QMainWindow):
     def button_was_clicked(self):
         bullet = QPushButton(self.lineEdit.text())
         self.groupBoxLayout.addWidget(bullet)
+        box = collapsableBox.CollapsableBox(self.lineEdit.text())
+        self.main_layout.addWidget(box)
+        self.lineEdit.setText("")
