@@ -2,6 +2,7 @@ import sys
 
 import collapsableBox
 import bulletPoint
+import customDialog
 
 from PyQt5.QtCore import (
     QSize, QPropertyAnimation, QParallelAnimationGroup
@@ -86,4 +87,5 @@ class WritingWindow(QMainWindow):
             for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
                 bullet.toggle_checkbox()
         else:
-            pass
+            dlg = customDialog.CustomDialog(self)
+            dlg.exec()
