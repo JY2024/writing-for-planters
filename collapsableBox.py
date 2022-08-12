@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation, QSize
+from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation
 from PyQt5.QtWidgets import (
     QVBoxLayout, QPushButton, QTextEdit, QWidget, QSizePolicy
 )
@@ -40,4 +40,3 @@ class CollapsableBox(QWidget):
         else:
             self.content_animation.setDirection(QAbstractAnimation.Backward)
         self.content_animation.start()
-
