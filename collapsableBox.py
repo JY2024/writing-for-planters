@@ -40,3 +40,6 @@ class CollapsableBox(QWidget):
         else:
             self.content_animation.setDirection(QAbstractAnimation.Backward)
         self.content_animation.start()
+
+    def text(self):
+        return self.button.text()

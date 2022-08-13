@@ -20,3 +20,9 @@ class BulletPoint(QHBoxLayout):
     def checkBox_selected(self):
         return self.checkBox.isChecked()
 
+    def text(self):
+        return self.button.text()
+
+    def removeItems(self):
+        self.removeWidget(self.button)
+        self.removeWidget(self.checkBox)

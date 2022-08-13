@@ -55,15 +55,15 @@ class WritingWindow(QMainWindow):
         self.removeButton.setChecked(False)
 
         # Main Layout
-        self.main_layout = QVBoxLayout()
-        self.main_layout.addWidget(outline_label)
-        self.main_layout.addLayout(outline_layout)
-        self.main_layout.addWidget(enterButton)
-        self.main_layout.addWidget(self.removeButton)
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.addWidget(outline_label)
+        self.mainLayout.addLayout(outline_layout)
+        self.mainLayout.addWidget(enterButton)
+        self.mainLayout.addWidget(self.removeButton)
 
         # Finish layout set up
         widget = QWidget()
-        widget.setLayout(self.main_layout)
+        widget.setLayout(self.mainLayout)
         scroll = QScrollArea()
         scroll.setWidget(widget)
         scroll.setWidgetResizable(True)
@@ -78,7 +78,7 @@ class WritingWindow(QMainWindow):
         bullet = bulletPoint.BulletPoint(self.lineEdit.text())
         self.groupBoxLayout.addLayout(bullet)
         box = collapsableBox.CollapsableBox(self.lineEdit.text())
-        self.main_layout.addWidget(box)
+        self.mainLayout.addWidget(box)
         self.lineEdit.setText("")
 
     # when button is clicked, show the checkboxes next to the bullet points
@@ -107,3 +107,22 @@ class WritingWindow(QMainWindow):
     def toggle_all_checkboxes(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
             bullet.toggle_checkbox()
+
+    def on_ok(self):
+        for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
+            if bullet.checkBox_selected():
+                box = self.find_matching_box(bullet)
+                if box != None:
+                    self.mainLayout.removeWidget(box)
+                    bullet.removeItems()
+                    self.groupBoxLayout.removeItem(bullet)
+
+    def on_reject(self):
+        pass
+
+    def find_matching_box(self, bullet):
+        for i in range(self.mainLayout.count()):
+            item = self.mainLayout.itemAt(i).widget()
+            if item != None and item.text() == bullet.text():
+                return item
+        return None
