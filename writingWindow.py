@@ -22,12 +22,14 @@ class WritingWindow(QMainWindow):
         self.setMaximumSize(QSize(1000, 700))
         # Set the window title according to the work title
 
-        # Outline label
+        # Outline and Story labels
         outline_label = QLabel("Outline")
+        story_label = QLabel("Story")
         font = QFont()
         font.setPointSize(20)
         font.setBold(True)
         outline_label.setFont(font)
+        story_label.setFont(font)
 
         # Line Edit
         self.lineEdit = QLineEdit()
@@ -60,6 +62,7 @@ class WritingWindow(QMainWindow):
         self.mainLayout.addLayout(outline_layout)
         self.mainLayout.addWidget(self.enterButton)
         self.mainLayout.addWidget(self.removeButton)
+        self.mainLayout.addWidget(story_label)
 
         # Finish layout set up
         widget = QWidget()
@@ -104,11 +107,17 @@ class WritingWindow(QMainWindow):
     def revert_remove_mode(self):
         self.removeButton.setChecked(False)
         self.toggle_all_checkboxes()
+        self.uncheck_all()
         self.enterButton.setDisabled(False)
 
     def toggle_all_checkboxes(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
             bullet.toggle_checkbox()
+
+    def uncheck_all(self):
+        for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
+            if bullet.checkBox_selected():
+                bullet.uncheck()
 
     def on_ok(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
@@ -119,9 +128,6 @@ class WritingWindow(QMainWindow):
                     bullet.removeItems()
                     self.groupBoxLayout.removeItem(bullet)
         self.revert_remove_mode()
-
-    def on_reject(self):
-        pass
 
     def find_matching_box(self, bullet):
         for i in range(self.mainLayout.count()):

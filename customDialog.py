@@ -24,4 +24,4 @@ class CustomDialog(QDialog):
 
     def on_reject(self):
         self.reject()
-        self.parent().on_reject()
+        self.parent().revert_remove_mode()

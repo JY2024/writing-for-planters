@@ -26,3 +26,6 @@ class BulletPoint(QHBoxLayout):
     def removeItems(self):
         self.removeWidget(self.button)
         self.removeWidget(self.checkBox)
+
+    def uncheck(self):
+        self.checkBox.setChecked(False)
