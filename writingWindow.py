@@ -45,8 +45,8 @@ class WritingWindow(QMainWindow):
         outline_layout.addWidget(self.groupBox)
 
         # Enter button
-        enterButton = QPushButton("Enter")
-        enterButton.setMaximumSize(QSize(100, 30))
+        self.enterButton = QPushButton("Enter")
+        self.enterButton.setMaximumSize(QSize(100, 30))
 
         # Remove button
         self.removeButton = QPushButton("Remove")
@@ -58,7 +58,7 @@ class WritingWindow(QMainWindow):
         self.mainLayout = QVBoxLayout()
         self.mainLayout.addWidget(outline_label)
         self.mainLayout.addLayout(outline_layout)
-        self.mainLayout.addWidget(enterButton)
+        self.mainLayout.addWidget(self.enterButton)
         self.mainLayout.addWidget(self.removeButton)
 
         # Finish layout set up
@@ -70,7 +70,7 @@ class WritingWindow(QMainWindow):
         self.setCentralWidget(scroll)
 
         # Connect signals
-        enterButton.clicked.connect(self.enter_was_clicked)
+        self.enterButton.clicked.connect(self.enter_was_clicked)
         self.removeButton.clicked.connect(self.remove_was_clicked)
 
     # when button is clicked, place text into outline group of buttons
@@ -85,6 +85,7 @@ class WritingWindow(QMainWindow):
     def remove_was_clicked(self):
         if self.removeButton.isChecked():
             self.toggle_all_checkboxes()
+            self.enterButton.setDisabled(True)
         else:
             if self.at_least_one_checked():
                 dlg = customDialog.CustomDialog(self)
@@ -103,6 +104,7 @@ class WritingWindow(QMainWindow):
     def revert_remove_mode(self):
         self.removeButton.setChecked(False)
         self.toggle_all_checkboxes()
+        self.enterButton.setDisabled(False)
 
     def toggle_all_checkboxes(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
@@ -116,6 +118,7 @@ class WritingWindow(QMainWindow):
                     self.mainLayout.removeWidget(box)
                     bullet.removeItems()
                     self.groupBoxLayout.removeItem(bullet)
+        self.revert_remove_mode()
 
     def on_reject(self):
         pass
