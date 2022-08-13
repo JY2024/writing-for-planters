@@ -19,7 +19,7 @@ class CustomDialog(QDialog):
         self.setLayout(self.layout)
 
     def ok(self):
-        parent.
+        pass
 
     def reject(self):
         pass

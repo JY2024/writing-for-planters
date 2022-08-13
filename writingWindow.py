@@ -84,8 +84,26 @@ class WritingWindow(QMainWindow):
     # when button is clicked, show the checkboxes next to the bullet points
     def remove_was_clicked(self):
         if self.removeButton.isChecked():
-            for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
-                bullet.toggle_checkbox()
+            self.toggle_all_checkboxes()
         else:
-            dlg = customDialog.CustomDialog(self)
-            dlg.exec()
+            if self.at_least_one_checked():
+                dlg = customDialog.CustomDialog(self)
+                dlg.exec()
+            else:
+                self.revert_remove_mode()
+
+    # returns whether at least one bullet point is checked off
+    def at_least_one_checked(self):
+        for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
+            if bullet.checkBox_selected():
+                return True
+        return False
+
+    # change back to state before remove mode was enabled
+    def revert_remove_mode(self):
+        self.removeButton.setChecked(False)
+        self.toggle_all_checkboxes()
+
+    def toggle_all_checkboxes(self):
+        for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
+            bullet.toggle_checkbox()

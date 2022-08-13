@@ -17,3 +17,6 @@ class BulletPoint(QHBoxLayout):
         else:
             self.checkBox.show()
 
+    def checkBox_selected(self):
+        return self.checkBox.isChecked()
+
