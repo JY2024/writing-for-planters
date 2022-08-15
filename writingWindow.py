@@ -87,14 +87,17 @@ class WritingWindow(QMainWindow):
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):
         text = self.lineEdit.text()
-        if (self.is_duplicate_bullet(text)):
-            pass
-
-        bullet = bulletPoint.BulletPoint(self.lineEdit.text(), self)
-        self.groupBoxLayout.addLayout(bullet)
-        box = collapsableBox.CollapsableBox(self.lineEdit.text())
-        self.mainLayout.addWidget(box)
-        self.lineEdit.setText("")
+        if self.is_duplicate_bullet(text):
+            dlg = customDialog.CustomDialog(
+                self, "Duplicate Bulletpoint", "You already have a bulletpoint with this name.\nDo you want to reorder instead?", self.on_enter_reorder_ok, self.on_enter_reorder_reject
+            )
+            dlg.exec()
+        else:
+            bullet = bulletPoint.BulletPoint(text, self)
+            self.groupBoxLayout.addLayout(bullet)
+            box = collapsableBox.CollapsableBox(text)
+            self.mainLayout.addWidget(box)
+            self.lineEdit.setText("")
 
     # when button is clicked, show the checkboxes next to the bullet points
     def remove_was_clicked(self):
@@ -103,7 +106,9 @@ class WritingWindow(QMainWindow):
             self.enterButton.setDisabled(True)
         else:
             if self.at_least_one_checked():
-                dlg = customDialog.CustomDialog(self, "Deletion", "Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE", self.on_delete_ok, self.revert_remove_mode)
+                dlg = customDialog.CustomDialog(
+                    self, "Deletion", "Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE", self.on_delete_ok, self.revert_remove_mode
+                )
                 dlg.exec()
             else:
                 self.revert_remove_mode()
@@ -167,3 +172,9 @@ class WritingWindow(QMainWindow):
             if bullet.get_text() == text:
                 return True
         return False
+
+    def on_enter_reorder_ok(self):
+        pass
+
+    def on_enter_reorder_reject(self):
+        self.lineEdit.clear()
