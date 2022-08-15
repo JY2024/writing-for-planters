@@ -34,7 +34,7 @@ class CollapsableBox(QWidget):
         self.setLayout(layout)
 
     def button_was_clicked(self):
-        checked = self.button.isChecked()
+        checked = self.get_checked()
         if checked:
             self.content_animation.setDirection(QAbstractAnimation.Forward)
         else:
@@ -44,5 +44,9 @@ class CollapsableBox(QWidget):
     def text(self):
         return self.button.text()
 
-    def getTextEdit(self):
-        return self.textEdit
+    def get_checked(self):
+        return self.button.isChecked()
+
+    def toggle_checked(self):
+        self.button.setChecked(not self.button.isChecked())
+

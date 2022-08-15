@@ -56,6 +56,12 @@ class WritingWindow(QMainWindow):
         self.removeButton.setCheckable(True)
         self.removeButton.setChecked(False)
 
+        # Toggle boxes button
+        self.toggleBoxesButton = QPushButton("Expand All")
+        self.toggleBoxesButton.setMaximumSize(QSize(100, 30))
+        self.toggleBoxesButton.setCheckable(True)
+        self.toggleBoxesButton.setChecked(False)
+
         # Main Layout
         self.mainLayout = QVBoxLayout()
         self.mainLayout.addWidget(outline_label)
@@ -63,6 +69,7 @@ class WritingWindow(QMainWindow):
         self.mainLayout.addWidget(self.enterButton)
         self.mainLayout.addWidget(self.removeButton)
         self.mainLayout.addWidget(story_label)
+        self.mainLayout.addWidget(self.toggleBoxesButton)
 
         # Finish layout set up
         widget = QWidget()
@@ -75,9 +82,14 @@ class WritingWindow(QMainWindow):
         # Connect signals
         self.enterButton.clicked.connect(self.enter_was_clicked)
         self.removeButton.clicked.connect(self.remove_was_clicked)
+        self.toggleBoxesButton.clicked.connect(self.toggle_boxes_clicked)
 
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):
+        text = self.lineEdit.text()
+        if (self.is_duplicate_bullet(text)):
+            pass
+
         bullet = bulletPoint.BulletPoint(self.lineEdit.text(), self)
         self.groupBoxLayout.addLayout(bullet)
         box = collapsableBox.CollapsableBox(self.lineEdit.text())
@@ -91,7 +103,7 @@ class WritingWindow(QMainWindow):
             self.enterButton.setDisabled(True)
         else:
             if self.at_least_one_checked():
-                dlg = customDialog.CustomDialog(self)
+                dlg = customDialog.CustomDialog(self, "Deletion", "Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE", self.on_delete_ok, self.revert_remove_mode)
                 dlg.exec()
             else:
                 self.revert_remove_mode()
@@ -119,7 +131,7 @@ class WritingWindow(QMainWindow):
             if bullet.checkBox_selected():
                 bullet.uncheck()
 
-    def on_ok(self):
+    def on_delete_ok(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
             if bullet.checkBox_selected():
                 box = self.find_matching_box(bullet)
@@ -139,3 +151,19 @@ class WritingWindow(QMainWindow):
     def bulletPoint_was_clicked(self, bullet):
         box = self.find_matching_box(bullet)
         self.scroll.ensureWidgetVisible(box)
+
+    def toggle_boxes_clicked(self):
+        cond = lambda bool: not bool if self.toggleBoxesButton.isChecked() else bool
+        setTxt = lambda: "Collapse All" if self.toggleBoxesButton.isChecked() else "Expand All"
+        self.toggleBoxesButton.setText(setTxt())
+        for i in range(self.mainLayout.count()):
+            item = self.mainLayout.itemAt(i).widget()
+            if isinstance(item, collapsableBox.CollapsableBox) and cond(item.get_checked()):
+                item.toggle_checked()
+                item.button_was_clicked()
+
+    def is_duplicate_bullet(self, text):
+        for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
+            if bullet.get_text() == text:
+                return True
+        return False

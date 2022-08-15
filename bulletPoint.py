@@ -34,3 +34,6 @@ class BulletPoint(QHBoxLayout):
 
     def uncheck(self):
         self.checkBox.setChecked(False)
+
+    def get_text(self):
+        return self.button.text()
