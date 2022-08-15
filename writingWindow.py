@@ -5,7 +5,7 @@ import bulletPoint
 import customDialog
 
 from PyQt5.QtCore import (
-    QSize, QPropertyAnimation, QParallelAnimationGroup
+    QSize, QPoint
 )
 from PyQt5 import Qt
 from PyQt5.QtGui import QFont
@@ -67,10 +67,10 @@ class WritingWindow(QMainWindow):
         # Finish layout set up
         widget = QWidget()
         widget.setLayout(self.mainLayout)
-        scroll = QScrollArea()
-        scroll.setWidget(widget)
-        scroll.setWidgetResizable(True)
-        self.setCentralWidget(scroll)
+        self.scroll = QScrollArea()
+        self.scroll.setWidget(widget)
+        self.scroll.setWidgetResizable(True)
+        self.setCentralWidget(self.scroll)
 
         # Connect signals
         self.enterButton.clicked.connect(self.enter_was_clicked)
@@ -78,7 +78,7 @@ class WritingWindow(QMainWindow):
 
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):
-        bullet = bulletPoint.BulletPoint(self.lineEdit.text())
+        bullet = bulletPoint.BulletPoint(self.lineEdit.text(), self)
         self.groupBoxLayout.addLayout(bullet)
         box = collapsableBox.CollapsableBox(self.lineEdit.text())
         self.mainLayout.addWidget(box)
@@ -135,3 +135,7 @@ class WritingWindow(QMainWindow):
             if item != None and item.text() == bullet.text():
                 return item
         return None
+
+    def bulletPoint_was_clicked(self, bullet):
+        box = self.find_matching_box(bullet)
+        self.scroll.ensureWidgetVisible(box)

@@ -43,3 +43,6 @@ class CollapsableBox(QWidget):
 
     def text(self):
         return self.button.text()
+
+    def getTextEdit(self):
+        return self.textEdit
