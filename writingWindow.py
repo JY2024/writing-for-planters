@@ -46,21 +46,10 @@ class WritingWindow(QMainWindow):
         outline_layout.addWidget(self.lineEdit)
         outline_layout.addWidget(self.groupBox)
 
-        # Enter button
-        self.enterButton = QPushButton("Enter")
-        self.enterButton.setMaximumSize(QSize(100, 30))
-
-        # Remove button
-        self.removeButton = QPushButton("Remove")
-        self.removeButton.setMaximumSize(QSize(100, 30))
-        self.removeButton.setCheckable(True)
-        self.removeButton.setChecked(False)
-
-        # Toggle boxes button
-        self.toggleBoxesButton = QPushButton("Expand All")
-        self.toggleBoxesButton.setMaximumSize(QSize(100, 30))
-        self.toggleBoxesButton.setCheckable(True)
-        self.toggleBoxesButton.setChecked(False)
+        # Buttons
+        self.enterButton = self.generate_button("Enter", False)
+        self.removeButton = self.generate_button("Remove", True)
+        self.toggleBoxesButton = self.generate_button("Expand All", True)
 
         # Main Layout
         self.mainLayout = QVBoxLayout()
@@ -83,6 +72,14 @@ class WritingWindow(QMainWindow):
         self.enterButton.clicked.connect(self.enter_was_clicked)
         self.removeButton.clicked.connect(self.remove_was_clicked)
         self.toggleBoxesButton.clicked.connect(self.toggle_boxes_clicked)
+
+    def generate_button(self, text, checkable):
+        button = QPushButton(text)
+        button.setMaximumSize(QSize(100, 30))
+        if checkable:
+            button.setCheckable(True)
+            button.setChecked(False)
+        return button
 
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):
