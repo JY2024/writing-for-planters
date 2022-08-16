@@ -3,14 +3,15 @@ import sys
 import collapsableBox
 import bulletPoint
 import customDialog
+import editWindow
 
 from PyQt5.QtCore import (
     QSize, QPoint
 )
 from PyQt5 import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QKeySequence
 from PyQt5.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea, QCheckBox
+    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea
 )
 
 
@@ -50,6 +51,7 @@ class WritingWindow(QMainWindow):
         self.enterButton = self.generate_button("Enter", False)
         self.removeButton = self.generate_button("Remove", True)
         self.toggleBoxesButton = self.generate_button("Expand All", True)
+        self.editButton = self.generate_button("Edit", False)
 
         # Main Layout
         self.mainLayout = QVBoxLayout()
@@ -57,6 +59,7 @@ class WritingWindow(QMainWindow):
         self.mainLayout.addLayout(outline_layout)
         self.mainLayout.addWidget(self.enterButton)
         self.mainLayout.addWidget(self.removeButton)
+        self.mainLayout.addWidget(self.editButton)
         self.mainLayout.addWidget(story_label)
         self.mainLayout.addWidget(self.toggleBoxesButton)
 
@@ -72,6 +75,7 @@ class WritingWindow(QMainWindow):
         self.enterButton.clicked.connect(self.enter_was_clicked)
         self.removeButton.clicked.connect(self.remove_was_clicked)
         self.toggleBoxesButton.clicked.connect(self.toggle_boxes_clicked)
+        self.editButton.clicked.connect(self.on_enter_edit_ok)
 
     def generate_button(self, text, checkable):
         button = QPushButton(text)
@@ -86,7 +90,7 @@ class WritingWindow(QMainWindow):
         text = self.lineEdit.text()
         if self.is_duplicate_bullet(text):
             dlg = customDialog.CustomDialog(
-                self, "Duplicate Bulletpoint", "You already have a bulletpoint with this name.\nDo you want to reorder instead?", self.on_enter_reorder_ok, self.on_enter_reorder_reject
+                self, "Duplicate Bulletpoint", "You already have a bulletpoint with this name.\nDo you want to reorder instead?", self.on_enter_edit_ok, self.on_enter_edit_reject
             )
             dlg.exec()
         else:
@@ -170,8 +174,9 @@ class WritingWindow(QMainWindow):
                 return True
         return False
 
-    def on_enter_reorder_ok(self):
-        pass
+    def on_enter_edit_ok(self):
+        dlg = editWindow.EditWindow()
+        dlg.exec()
 
-    def on_enter_reorder_reject(self):
+    def on_enter_edit_reject(self):
         self.lineEdit.clear()
