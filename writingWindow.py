@@ -90,7 +90,7 @@ class WritingWindow(QMainWindow):
         text = self.lineEdit.text()
         if self.is_duplicate_bullet(text):
             dlg = customDialog.CustomDialog(
-                self, "Duplicate Bulletpoint", QLabel("You already have a bulletpoint with this name.\nDo you want to reorder instead?"), self.on_enter_edit_ok, self.on_edit_reject
+                self, "Duplicate Bulletpoint", QSize(300, 100), QLabel("You already have a bulletpoint with this name.\nDo you want to reorder instead?"), self.on_enter_edit_ok, self.on_edit_reject
             )
             dlg.exec()
         else:
@@ -105,10 +105,11 @@ class WritingWindow(QMainWindow):
         if self.removeButton.isChecked():
             self.toggle_all_checkboxes()
             self.enterButton.setDisabled(True)
+            self.editButton.setDisabled(True)
         else:
             if self.at_least_one_checked():
                 dlg = customDialog.CustomDialog(
-                    self, "Deletion", QLabel("Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE"), self.on_delete_ok, self.revert_remove_mode
+                    self, "Deletion", QSize(300, 100), QLabel("Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE"), self.on_delete_ok, self.revert_remove_mode
                 )
                 dlg.exec()
             else:
@@ -127,6 +128,7 @@ class WritingWindow(QMainWindow):
         self.toggle_all_checkboxes()
         self.uncheck_all()
         self.enterButton.setDisabled(False)
+        self.editButton.setDisabled(False)
 
     def toggle_all_checkboxes(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
@@ -175,9 +177,9 @@ class WritingWindow(QMainWindow):
         return False
 
     def on_enter_edit_ok(self):
-        edit = editWindow.EditWindow()
+        edit = editWindow.EditWindow(self.groupBox.findChildren(bulletPoint.BulletPoint))
         dlg = customDialog.CustomDialog(
-            self, "Edit", edit, self.on_edit_ok, self.on_edit_reject
+            self, "Edit", QSize(400, 700), edit, self.on_edit_ok, self.on_edit_reject
         )
         dlg.exec()
 

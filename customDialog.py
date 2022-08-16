@@ -2,12 +2,13 @@ from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
 
 
 class CustomDialog(QDialog):
-    def __init__(self, parent, title, widget, ok_method, reject_method):
+    def __init__(self, parent, title, size, widget, ok_method, reject_method):
         super().__init__(parent)
 
         self.setWindowTitle(title)
         self.ok_method = ok_method
         self.reject_method = reject_method
+        self.setFixedSize(size)
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
