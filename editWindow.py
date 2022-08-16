@@ -1,15 +1,16 @@
-from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QDialog
+from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout
 
 
-class EditWindow(QDialog):
+class EditWindow(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.setWindowTitle("Edit")
 
         self.mainLayout = QVBoxLayout()
 
         # Finish layout set up
-        widget = QWidget()
-        widget.setLayout(self.mainLayout)
+        self.setLayout(self.mainLayout)
         self.scroll = QScrollArea()
-        self.scroll.setWidget(widget)
+        self.scroll.setWidget(self)
         self.scroll.setWidgetResizable(True)

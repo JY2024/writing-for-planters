@@ -1,8 +1,8 @@
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout
 
 
 class CustomDialog(QDialog):
-    def __init__(self, parent, title, text, ok_method, reject_method):
+    def __init__(self, parent, title, widget, ok_method, reject_method):
         super().__init__(parent)
 
         self.setWindowTitle(title)
@@ -15,8 +15,7 @@ class CustomDialog(QDialog):
         self.buttonBox.rejected.connect(self.on_reject)
 
         self.layout = QVBoxLayout()
-        message = QLabel(text)
-        self.layout.addWidget(message)
+        self.layout.addWidget(widget)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 

@@ -90,7 +90,7 @@ class WritingWindow(QMainWindow):
         text = self.lineEdit.text()
         if self.is_duplicate_bullet(text):
             dlg = customDialog.CustomDialog(
-                self, "Duplicate Bulletpoint", "You already have a bulletpoint with this name.\nDo you want to reorder instead?", self.on_enter_edit_ok, self.on_enter_edit_reject
+                self, "Duplicate Bulletpoint", QLabel("You already have a bulletpoint with this name.\nDo you want to reorder instead?"), self.on_enter_edit_ok, self.on_edit_reject
             )
             dlg.exec()
         else:
@@ -108,7 +108,7 @@ class WritingWindow(QMainWindow):
         else:
             if self.at_least_one_checked():
                 dlg = customDialog.CustomDialog(
-                    self, "Deletion", "Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE", self.on_delete_ok, self.revert_remove_mode
+                    self, "Deletion", QLabel("Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE"), self.on_delete_ok, self.revert_remove_mode
                 )
                 dlg.exec()
             else:
@@ -175,8 +175,14 @@ class WritingWindow(QMainWindow):
         return False
 
     def on_enter_edit_ok(self):
-        dlg = editWindow.EditWindow()
+        edit = editWindow.EditWindow()
+        dlg = customDialog.CustomDialog(
+            self, "Edit", edit, self.on_edit_ok, self.on_edit_reject
+        )
         dlg.exec()
 
-    def on_enter_edit_reject(self):
+    def on_edit_reject(self):
         self.lineEdit.clear()
+
+    def on_edit_ok(self):
+        pass
