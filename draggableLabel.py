@@ -9,7 +9,7 @@ class DraggableLabel(QLineEdit):
         self.setParent(parent)
         self.setFixedSize(200, 40)
         self.setText(text)
-        self.toggle_read_only()
+        self.setStyleSheet("border: 1px solid black; background-color: white")
         self.drag_start_pos = None
 
     def mousePressEvent(self, event):
@@ -29,15 +29,4 @@ class DraggableLabel(QLineEdit):
         self.setCursor(Qt.ArrowCursor)
         self.drag_start_pos = None
         self.parent().on_mouse_release()
-
-    def mouseDoubleClickEvent(self, event):
-        pass
-
-    def toggle_read_only(self):
-        if self.isReadOnly():
-            self.setReadOnly(False)
-            self.setStyleSheet("border: 1px solid black; background-color: white")
-        else:
-            self.setReadOnly(True)
-            self.setStyleSheet("border: 1px solid black; background-color: gray")
 

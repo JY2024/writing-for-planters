@@ -21,8 +21,11 @@ class EditWindow(QWidget):
         self.scroll.setWidgetResizable(True)
 
     def on_mouse_release(self):
-        labels = [self.mainLayout.itemAt(i).widget() for i in range(self.mainLayout.count())]
-        order = sorted(labels, key=lambda label: label.pos().y())
+        order = self.sorted_children()
         for index, widget in enumerate(order):
             self.mainLayout.takeAt(index)
             self.mainLayout.insertWidget(index, widget)
+
+    def sorted_children(self):
+        labels = [self.mainLayout.itemAt(i).widget() for i in range(self.mainLayout.count())]
+        return sorted(labels, key=lambda label: label.pos().y())

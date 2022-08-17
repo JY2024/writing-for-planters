@@ -37,3 +37,6 @@ class BulletPoint(QHBoxLayout):
 
     def get_text(self):
         return self.button.text()
+
+    def set_text(self, text):
+        self.button.setText(text)

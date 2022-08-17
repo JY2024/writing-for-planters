@@ -3,6 +3,7 @@ import sys
 import collapsableBox
 import bulletPoint
 import customDialog
+import draggableLabel
 import editWindow
 
 from PyQt5.QtCore import (
@@ -186,5 +187,11 @@ class WritingWindow(QMainWindow):
     def on_edit_reject(self):
         self.lineEdit.clear()
 
-    def on_edit_ok(self):
-        pass
+    def on_edit_ok(self, widget):
+        # Change bulletpoint buttons texts
+        bulletPoints = self.groupBox.findChildren(bulletPoint.BulletPoint)
+        lineEdits = widget.sorted_children()
+        for (bullet, lineEdit) in zip(bulletPoints, lineEdits):
+            bullet.set_text(lineEdit.text())
+
+        # Reorder the boxes
