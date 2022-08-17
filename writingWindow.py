@@ -1,4 +1,5 @@
 import sys
+from collections import OrderedDict
 
 import collapsableBox
 import bulletPoint
@@ -78,6 +79,8 @@ class WritingWindow(QMainWindow):
         self.toggleBoxesButton.clicked.connect(self.toggle_boxes_clicked)
         self.editButton.clicked.connect(self.on_enter_edit_ok)
 
+        self.firstBoxIndex = None
+
     def generate_button(self, text, checkable):
         button = QPushButton(text)
         button.setMaximumSize(QSize(100, 30))
@@ -99,6 +102,8 @@ class WritingWindow(QMainWindow):
             self.groupBoxLayout.addLayout(bullet)
             box = collapsableBox.CollapsableBox(text)
             self.mainLayout.addWidget(box)
+            if self.firstBoxIndex == None:
+                self.firstBoxIndex = self.mainLayout.indexOf(box)
             self.lineEdit.setText("")
 
     # when button is clicked, show the checkboxes next to the bullet points
@@ -143,22 +148,22 @@ class WritingWindow(QMainWindow):
     def on_delete_ok(self):
         for bullet in self.groupBox.findChildren(bulletPoint.BulletPoint):
             if bullet.checkBox_selected():
-                box = self.find_matching_box(bullet)
+                box = self.find_matching_box(bullet.get_text())
                 if box != None:
                     self.mainLayout.removeWidget(box)
                     bullet.removeItems()
                     self.groupBoxLayout.removeItem(bullet)
         self.revert_remove_mode()
 
-    def find_matching_box(self, bullet):
+    def find_matching_box(self, text):
         for i in range(self.mainLayout.count()):
             item = self.mainLayout.itemAt(i).widget()
-            if item != None and item.text() == bullet.text():
+            if item != None and item.text() == text:
                 return item
         return None
 
     def bulletPoint_was_clicked(self, bullet):
-        box = self.find_matching_box(bullet)
+        box = self.find_matching_box(bullet.get_text())
         self.scroll.ensureWidgetVisible(box)
 
     def toggle_boxes_clicked(self):
@@ -195,3 +200,19 @@ class WritingWindow(QMainWindow):
             bullet.set_text(lineEdit.text())
 
         # Reorder the boxes
+        # DOESNT WORK SOMETIMES IDK WHY
+        for i in range(len(lineEdits)):
+            targetIndex = self.firstBoxIndex + i
+            box = self.find_matching_box(lineEdits[i].text())
+            text = lineEdits[i].text()
+            indexOfBox = self.mainLayout.indexOf(box)
+            if indexOfBox != targetIndex:
+                temp = self.mainLayout.itemAt(targetIndex).widget()
+                self.mainLayout.takeAt(targetIndex)
+                self.mainLayout.takeAt(indexOfBox)
+                self.mainLayout.insertWidget(targetIndex, box)
+                self.mainLayout.insertWidget(indexOfBox, temp)
+
+
+
+

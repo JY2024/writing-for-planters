@@ -29,4 +29,3 @@ class DraggableLabel(QLineEdit):
         self.setCursor(Qt.ArrowCursor)
         self.drag_start_pos = None
         self.parent().on_mouse_release()
-
