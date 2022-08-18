@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QSize
 
 import customDialog
+import workCreationWidget
 import workSummary
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QScrollArea, QWidget, QPushButton
 
@@ -24,4 +25,12 @@ class WorksWindow(QMainWindow):
         self.createButton.clicked.connect(self.on_create_clicked)
 
     def on_create_clicked(self):
-        pass
+        workCreation = workCreationWidget.WorkCreationWidget()
+        dlg = customDialog.CustomDialog(
+            self, "Create New Work", QSize(500, 500), workCreation, self.on_create_ok, None
+        )
+        dlg.exec()
+
+    def on_create_ok(self, widget):
+        work = workSummary.WorkSummary(widget.get_title(), widget.get_tags(), widget.get_description())
+        self.layout.addWidget(work)

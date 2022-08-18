@@ -30,4 +30,5 @@ class CustomDialog(QDialog):
 
     def on_reject(self):
         self.reject()
-        self.reject_method()
+        if self.reject_method != None:
+            self.reject_method()
