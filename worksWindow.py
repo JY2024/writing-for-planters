@@ -3,10 +3,8 @@ from PyQt5.QtCore import QSize
 import customDialog
 import workCreationWidget
 import workSummary
+import workPage
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QScrollArea, QWidget, QPushButton, QLabel
-
-import writingWindow
-
 
 class WorksWindow(QMainWindow):
     def __init__(self):
@@ -46,8 +44,8 @@ class WorksWindow(QMainWindow):
     def on_create_ok(self, widget):
         work = workSummary.WorkSummary(self, widget.get_title(), widget.get_tags(), widget.get_description())
         self.layout.addWidget(work)
-        workWriting = writingWindow.WritingWindow(widget.get_title())
-        self.works[widget.get_title()] = [work, workWriting]
+        newWorkPage = workPage.WorkPage(widget.get_title(), widget.get_tags(), widget.get_description())
+        self.works[widget.get_title()] = [work, newWorkPage]
 
     def open_work(self, title):
         self.works[title][1].show()
@@ -67,6 +65,7 @@ class WorksWindow(QMainWindow):
             if summary.is_checked():
                 self.layout.removeWidget(summary)
                 self.works.pop(title)
+        self.toggle_all_checkboxes()
 
     def toggle_all_checkboxes(self):
         for key, value in self.works.items():
