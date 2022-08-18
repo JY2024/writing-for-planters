@@ -19,11 +19,11 @@ from PyQt5.QtWidgets import (
 
 # Writing window
 class WritingWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, title):
         super().__init__()
         self.resize(QSize(1000, 700))
         self.setMaximumSize(QSize(1000, 700))
-        # Set the window title according to the work title
+        self.setWindowTitle(title)
 
         # Outline and Story labels
         outline_label = QLabel("Outline")

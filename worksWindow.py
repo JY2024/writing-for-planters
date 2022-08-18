@@ -5,11 +5,18 @@ import workCreationWidget
 import workSummary
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QScrollArea, QWidget, QPushButton
 
+import writingWindow
+
+
 class WorksWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.resize(QSize(1000, 700))
-        self.setMaximumSize(QSize(1000, 700))
+
+        self.setWindowTitle("Works")
+        self.works = {}
+
+        self.resize(QSize(900, 700))
+        self.setMaximumSize(QSize(900, 700))
         self.layout = QVBoxLayout()
         self.createButton = QPushButton("Create New Work")
         self.layout.addWidget(self.createButton)
@@ -32,5 +39,10 @@ class WorksWindow(QMainWindow):
         dlg.exec()
 
     def on_create_ok(self, widget):
-        work = workSummary.WorkSummary(widget.get_title(), widget.get_tags(), widget.get_description())
+        work = workSummary.WorkSummary(self, widget.get_title(), widget.get_tags(), widget.get_description())
         self.layout.addWidget(work)
+        workWriting = writingWindow.WritingWindow(widget.get_title())
+        self.works[widget.get_title()] = workWriting
+
+    def open_work(self, title):
+        work = self.works[title].show()
