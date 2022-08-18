@@ -36,8 +36,11 @@ class WorkSummary(QWidget):
     def on_title_clicked(self):
         self.my_parent.open_work(self.titleButton.text())
 
-    def show_checkbox(self):
-        self.checkBox.show()
+    def toggle_checkbox_visible(self):
+        if self.checkBox.isVisible():
+            self.checkBox.hide()
+        else:
+            self.checkBox.show()
 
     def is_checked(self):
         return self.checkBox.isChecked()

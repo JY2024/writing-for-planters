@@ -54,11 +54,10 @@ class WorksWindow(QMainWindow):
 
     def on_remove_clicked(self):
         if self.removeButton.isChecked():
-            for key, value in self.works.items():
-                value[0].show_checkbox()
+            self.toggle_all_checkboxes()
         else:
             dlg = customDialog.CustomDialog(
-                self, "Remove Works", QSize(300, 100), QLabel("Are you sure you want to remove these works?\nTHIS IS NOT REVERSIBLE."), self.on_remove_ok, self.revert_remove
+                self, "Remove Works", QSize(300, 100), QLabel("Are you sure you want to remove these works?\nTHIS IS NOT REVERSIBLE."), self.on_remove_ok, self.toggle_all_checkboxes
             )
             dlg.exec()
 
@@ -69,5 +68,6 @@ class WorksWindow(QMainWindow):
                 self.layout.removeWidget(summary)
                 self.works.pop(title)
 
-    def revert_remove(self):
-        pass
+    def toggle_all_checkboxes(self):
+        for key, value in self.works.items():
+            value[0].toggle_checkbox_visible()
