@@ -1,6 +1,8 @@
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QCheckBox
 
+import designFunctions
+
 
 class WorkSummary(QWidget):
     def __init__(self, parent, title, tags, description):
@@ -12,17 +14,13 @@ class WorkSummary(QWidget):
 
         self.topLayout = QHBoxLayout()
 
-        self.titleButton = QPushButton(title)
-        self.titleButton.setStyleSheet("background-color:yellow;border:1px solid black;font:bold 20px")
-        self.titleButton.setMaximumSize(QSize(400, 50))
+        self.titleButton = designFunctions.generate_button(title, background_color="yellow", border=True, bold=True, font_size="20px", size=QSize(400, 50))
         self.topLayout.addWidget(self.titleButton)
         self.checkBox = QCheckBox()
         self.checkBox.hide()
         self.topLayout.addWidget(self.checkBox)
-        self.tagLabel = QLabel(tags)
-        self.tagLabel.setStyleSheet("background-color:white;border:1px solid black;font:14px")
-        self.descriptionLabel = QLabel(description)
-        self.descriptionLabel.setStyleSheet("background-color:white;border:1px solid black;font:14px")
+        self.tagLabel = designFunctions.generate_label(tags, border=True, font_size="14px")
+        self.descriptionLabel = designFunctions.generate_label(border=True, font_size="14px")
 
         self.mainLayout = QVBoxLayout()
 

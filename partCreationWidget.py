@@ -1,3 +1,6 @@
+import designFunctions
+
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit, QLabel
 
 
@@ -8,16 +11,12 @@ class PartCreationWidget(QWidget):
         self.layout = QVBoxLayout()
         self.title = QLineEdit()
         self.synopsis = QTextEdit()
-        self.layout.addWidget(self.generate_label("Part Title"))
+
+        self.layout.addWidget(designFunctions.generate_label("Part Title", size=QSize(100, 50)))
         self.layout.addWidget(self.title)
-        self.layout.addWidget(self.generate_label("Synopsis"))
+        self.layout.addWidget(designFunctions.generate_label("Synopsis", size=QSize(100, 50)))
         self.layout.addWidget(self.synopsis)
         self.setLayout(self.layout)
-
-    def generate_label(self, text):
-        label = QLabel(text)
-        label.setFixedSize(100, 50)
-        return label
 
     def get_title(self):
         return self.title.text()

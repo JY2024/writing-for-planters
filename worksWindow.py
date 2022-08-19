@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QSize
 
 import customDialog
+import designFunctions
 import workCreationWidget
 import workSummary
 import workPage
@@ -16,11 +17,9 @@ class WorksWindow(QMainWindow):
         self.resize(QSize(900, 700))
         self.setMaximumSize(QSize(900, 700))
         self.layout = QVBoxLayout()
-        self.createButton = QPushButton("Create New Work")
+        self.createButton = designFunctions.generate_button("Create New Work")
         self.layout.addWidget(self.createButton)
-        self.removeButton = QPushButton("Remove Works")
-        self.removeButton.setCheckable(True)
-        self.removeButton.setChecked(False)
+        self.removeButton = designFunctions.generate_button("Remove Works", checkable=True)
         self.layout.addWidget(self.removeButton)
 
         # Finish set up

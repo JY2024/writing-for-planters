@@ -5,6 +5,7 @@ import customDialog
 import partCreationWidget
 import writingWindow
 import partSummary
+import designFunctions
 
 
 class WorkPage(QMainWindow):
@@ -17,20 +18,11 @@ class WorkPage(QMainWindow):
         self.setWindowTitle(title)
         self.resize(QSize(900, 700))
         self.setMaximumSize(QSize(900, 700))
-        self.titleLabel = QLabel(title)
-        self.titleLabel.setStyleSheet("font: bold 40px")
-        self.titleLabel.setAlignment(Qt.AlignCenter)
 
-        self.tagLabel = QLabel(tags)
-        self.tagLabel.setStyleSheet("background-color:white;border:1px solid black;font:14px")
-        self.tagLabel.setMinimumSize(QSize(800, 200))
-        self.tagLabel.setMaximumSize(QSize(800, 300))
-        self.tagLabel.setAlignment(Qt.AlignCenter)
-        self.descriptionLabel = QLabel(description)
-        self.descriptionLabel.setStyleSheet("background-color:white;border:1px solid black;font:14px")
-        self.descriptionLabel.setMinimumSize(QSize(800, 200))
-        self.descriptionLabel.setMaximumSize(QSize(800, 300))
-        self.descriptionLabel.setAlignment(Qt.AlignCenter)
+        self.titleLabel = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
+
+        self.tagLabel = designFunctions.generate_label(tags, font_size="14px", border=True, size=QSize(800, 200), alignment=Qt.AlignCenter)
+        self.descriptionLabel = designFunctions.generate_label(description, font_size="14px", border=True, size=QSize(800, 200), alignment=Qt.AlignCenter)
         self.addPartButton = QPushButton("Add Part")
 
         self.mainLayout = QVBoxLayout()

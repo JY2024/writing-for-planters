@@ -1,5 +1,7 @@
+import designFunctions
+
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QCheckBox, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QCheckBox, QLabel, QVBoxLayout
 
 
 class PartSummary(QWidget):
@@ -12,17 +14,15 @@ class PartSummary(QWidget):
         self.setMaximumSize(QSize(500, 400))
 
         self.topLayout = QHBoxLayout()
-
-        self.titleButton = QPushButton("Part " + str(partNumber) + ": " +title)
-        self.titleButton.setStyleSheet("background-color:white;border:1px solid black;font:bold 20px")
-        self.titleButton.setMaximumSize(QSize(400, 50))
+        self.titleButton = designFunctions.generate_button(
+            "Part " + str(partNumber) + ": " + title, bold=True, border=True, size=QSize(400, 50)
+        )
         self.topLayout.addWidget(self.titleButton)
         # Completion status
         self.checkBox = QCheckBox()
         self.checkBox.hide()
         self.topLayout.addWidget(self.checkBox)
-        self.synopsisLabel = QLabel(synopsis)
-        self.synopsisLabel.setStyleSheet("background-color:white;border:1px solid black;font:14px")
+        self.synopsisLabel = designFunctions.generate_label(synopsis, font_size="14px", border=True)
 
         self.mainLayout = QVBoxLayout()
 

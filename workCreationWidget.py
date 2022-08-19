@@ -1,4 +1,7 @@
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit, QLabel
+
+import designFunctions
 
 
 class WorkCreationWidget(QWidget):
@@ -9,18 +12,14 @@ class WorkCreationWidget(QWidget):
         self.title = QLineEdit()
         self.tags = QTextEdit()
         self.description = QTextEdit()
-        self.layout.addWidget(self.generate_label("Title"))
+
+        self.layout.addWidget(designFunctions.generate_label("Title", size=QSize(100, 50)))
         self.layout.addWidget(self.title)
-        self.layout.addWidget(self.generate_label("Tags"))
+        self.layout.addWidget(designFunctions.generate_label("Tags", size=QSize(100, 50)))
         self.layout.addWidget(self.tags)
-        self.layout.addWidget(self.generate_label("Description"))
+        self.layout.addWidget(designFunctions.generate_label("Description", size=QSize(100, 50)))
         self.layout.addWidget(self.description)
         self.setLayout(self.layout)
-
-    def generate_label(self, text):
-        label = QLabel(text)
-        label.setFixedSize(100, 50)
-        return label
 
     def get_title(self):
         return self.title.text()

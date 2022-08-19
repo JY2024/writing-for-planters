@@ -1,17 +1,13 @@
-import sys
-from collections import OrderedDict
-
 import collapsableBox
 import bulletPoint
 import customDialog
-import draggableLabel
 import editWindow
+import designFunctions
 
 from PyQt5.QtCore import (
-    QSize, QPoint
+    QSize
 )
-from PyQt5 import Qt
-from PyQt5.QtGui import QFont, QKeySequence
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea
 )
@@ -26,13 +22,8 @@ class WritingWindow(QMainWindow):
         self.setWindowTitle(title)
 
         # Outline and Story labels
-        outline_label = QLabel("Outline")
-        story_label = QLabel("Story")
-        font = QFont()
-        font.setPointSize(20)
-        font.setBold(True)
-        outline_label.setFont(font)
-        story_label.setFont(font)
+        outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
+        story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
 
         # Line Edit
         self.lineEdit = QLineEdit()
@@ -50,10 +41,10 @@ class WritingWindow(QMainWindow):
         outline_layout.addWidget(self.groupBox)
 
         # Buttons
-        self.enterButton = self.generate_button("Enter", False)
-        self.removeButton = self.generate_button("Remove", True)
-        self.toggleBoxesButton = self.generate_button("Expand All", True)
-        self.editButton = self.generate_button("Edit", False)
+        self.enterButton = designFunctions.generate_button("Enter", checkable=False)
+        self.removeButton = designFunctions.generate_button("Remove", checkable=True)
+        self.toggleBoxesButton = designFunctions.generate_button("Expand All", checkable=True)
+        self.editButton = designFunctions.generate_button("Edit", checkable=False)
 
         # Main Layout
         self.mainLayout = QVBoxLayout()
@@ -80,14 +71,6 @@ class WritingWindow(QMainWindow):
         self.editButton.clicked.connect(self.on_enter_edit_ok)
 
         self.firstBoxIndex = None
-
-    def generate_button(self, text, checkable):
-        button = QPushButton(text)
-        button.setMaximumSize(QSize(100, 30))
-        if checkable:
-            button.setCheckable(True)
-            button.setChecked(False)
-        return button
 
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):

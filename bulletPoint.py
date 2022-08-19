@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QCheckBox, QHBoxLayout
+from PyQt5.QtWidgets import QPushButton, QCheckBox, QHBoxLayout
 
 
 class BulletPoint(QHBoxLayout):
