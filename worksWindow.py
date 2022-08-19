@@ -5,30 +5,19 @@ import designFunctions
 import workCreationWidget
 import workSummary
 import workPage
+import scrollableWindow
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QScrollArea, QWidget, QPushButton, QLabel
 
-class WorksWindow(QMainWindow):
+class WorksWindow(scrollableWindow.ScrollableWindow):
     def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("Works")
         self.works = {}
-
-        self.resize(QSize(900, 700))
-        self.setMaximumSize(QSize(900, 700))
         self.layout = QVBoxLayout()
         self.createButton = designFunctions.generate_button("Create New Work")
         self.layout.addWidget(self.createButton)
         self.removeButton = designFunctions.generate_button("Remove Works", checkable=True)
         self.layout.addWidget(self.removeButton)
 
-        # Finish set up
-        widget = QWidget()
-        widget.setLayout(self.layout)
-        self.scroll = QScrollArea()
-        self.scroll.setWidget(widget)
-        self.scroll.setWidgetResizable(True)
-        self.setCentralWidget(self.scroll)
+        super().__init__("Works", QSize(900, 700), self.layout)
 
         self.createButton.clicked.connect(self.on_create_clicked)
         self.removeButton.clicked.connect(self.on_remove_clicked)

@@ -6,23 +6,20 @@ import partCreationWidget
 import writingWindow
 import partSummary
 import designFunctions
+import scrollableWindow
 
 
-class WorkPage(QMainWindow):
+class WorkPage(scrollableWindow.ScrollableWindow):
     def __init__(self, title, tags, description):
-        super().__init__()
-        
         self.totalChapters = 0
         self.parts = {}
 
-        self.setWindowTitle(title)
-        self.resize(QSize(900, 700))
-        self.setMaximumSize(QSize(900, 700))
-
         self.titleLabel = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
 
-        self.tagLabel = designFunctions.generate_label(tags, font_size="14px", border=True, size=QSize(800, 200), alignment=Qt.AlignCenter)
-        self.descriptionLabel = designFunctions.generate_label(description, font_size="14px", border=True, size=QSize(800, 200), alignment=Qt.AlignCenter)
+        self.tagLabel = designFunctions.generate_label(tags, font_size="14px", border=True, size=QSize(800, 200),
+                                                       background_color="white")
+        self.descriptionLabel = designFunctions.generate_label(description, font_size="14px", border=True,
+                                                               size=QSize(800, 200), background_color="white")
         self.addPartButton = QPushButton("Add Part")
 
         self.mainLayout = QVBoxLayout()
@@ -31,13 +28,7 @@ class WorkPage(QMainWindow):
         self.mainLayout.addWidget(self.descriptionLabel)
         self.mainLayout.addWidget(self.addPartButton)
 
-        # Finish set up
-        widget = QWidget()
-        widget.setLayout(self.mainLayout)
-        self.scroll = QScrollArea()
-        self.scroll.setWidget(widget)
-        self.scroll.setWidgetResizable(True)
-        self.setCentralWidget(self.scroll)
+        super().__init__(title, QSize(900, 700), self.mainLayout)
         
         self.addPartButton.clicked.connect(self.on_add_clicked)
         

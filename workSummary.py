@@ -9,18 +9,21 @@ class WorkSummary(QWidget):
         super().__init__()
         self.my_parent = parent
 
-        self.setMinimumSize(QSize(500, 400))
-        self.setMaximumSize(QSize(500, 400))
+        self.setMinimumSize(QSize(500, 500))
+        self.setMaximumSize(QSize(500, 500))
 
         self.topLayout = QHBoxLayout()
 
-        self.titleButton = designFunctions.generate_button(title, background_color="yellow", border=True, bold=True, font_size="20px", size=QSize(400, 50))
+        self.titleButton = designFunctions.generate_button(title, background_color="yellow", border=True, bold=True,
+                                                           font_size="20px", size=QSize(200, 50))
         self.topLayout.addWidget(self.titleButton)
         self.checkBox = QCheckBox()
         self.checkBox.hide()
         self.topLayout.addWidget(self.checkBox)
-        self.tagLabel = designFunctions.generate_label(tags, border=True, font_size="14px")
-        self.descriptionLabel = designFunctions.generate_label(border=True, font_size="14px")
+        self.tagLabel = designFunctions.generate_label(tags, border=True, font_size="14px", background_color="white",
+                                                       size=QSize(400, 200))
+        self.descriptionLabel = designFunctions.generate_label(description, border=True, font_size="14px",
+                                                               background_color="white", size=QSize(400, 200))
 
         self.mainLayout = QVBoxLayout()
 

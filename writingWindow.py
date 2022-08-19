@@ -3,24 +3,19 @@ import bulletPoint
 import customDialog
 import editWindow
 import designFunctions
+import scrollableWindow
 
 from PyQt5.QtCore import (
     QSize
 )
-from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea
 )
 
 
 # Writing window
-class WritingWindow(QMainWindow):
+class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
-        super().__init__()
-        self.resize(QSize(1000, 700))
-        self.setMaximumSize(QSize(1000, 700))
-        self.setWindowTitle(title)
-
         # Outline and Story labels
         outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
         story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
@@ -56,13 +51,7 @@ class WritingWindow(QMainWindow):
         self.mainLayout.addWidget(story_label)
         self.mainLayout.addWidget(self.toggleBoxesButton)
 
-        # Finish layout set up
-        widget = QWidget()
-        widget.setLayout(self.mainLayout)
-        self.scroll = QScrollArea()
-        self.scroll.setWidget(widget)
-        self.scroll.setWidgetResizable(True)
-        self.setCentralWidget(self.scroll)
+        super().__init__(title, QSize(1000, 700), self.mainLayout)
 
         # Connect signals
         self.enterButton.clicked.connect(self.enter_was_clicked)

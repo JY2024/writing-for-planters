@@ -1,5 +1,5 @@
 import designFunctions
-from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation
+from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation, QSize
 from PyQt5.QtWidgets import (
     QVBoxLayout, QPushButton, QTextEdit, QWidget, QSizePolicy
 )
@@ -17,7 +17,7 @@ class CollapsableBox(QWidget):
         self.animation_group = QParallelAnimationGroup(self)
 
         layout = QVBoxLayout(self)
-        self.button = designFunctions.generate_button(text, True)
+        self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
 
         layout.addWidget(self.button)
         layout.addWidget(self.textEdit)
