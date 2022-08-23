@@ -3,8 +3,9 @@ from PyQt5.QtWidgets import QLineEdit
 
 
 class DraggableLabel(QLineEdit):
-    def __init__(self, parent=None, text=None):
+    def __init__(self, parent=None, text=None, id=None):
         super().__init__()
+        self.id = id
 
         self.setParent(parent)
         self.setFixedSize(200, 40)
@@ -29,3 +30,6 @@ class DraggableLabel(QLineEdit):
         self.setCursor(Qt.ArrowCursor)
         self.drag_start_pos = None
         self.parent().on_mouse_release()
+
+    def id(self):
+        return self.id

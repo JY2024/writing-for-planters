@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
+        self.num_parts = 0
         # Outline and Story labels
         outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
         story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
@@ -75,9 +76,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             )
             dlg.exec()
         else:
+            self.num_parts += 1
             box = collapsableBox.CollapsableBox(text)
             self.boxes_layout.addWidget(box)
-            bullet = bulletPoint.BulletPoint(text, self, box)
+            bullet = bulletPoint.BulletPoint(text, self, box, self.num_parts)
             self.groupBoxLayout.addLayout(bullet)
             if self.firstBoxIndex == None:
                 self.firstBoxIndex = self.boxes_layout.indexOf(box)
