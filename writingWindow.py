@@ -75,10 +75,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             )
             dlg.exec()
         else:
-            bullet = bulletPoint.BulletPoint(text, self)
-            self.groupBoxLayout.addLayout(bullet)
             box = collapsableBox.CollapsableBox(text)
             self.boxes_layout.addWidget(box)
+            bullet = bulletPoint.BulletPoint(text, self, box)
+            self.groupBoxLayout.addLayout(bullet)
             if self.firstBoxIndex == None:
                 self.firstBoxIndex = self.boxes_layout.indexOf(box)
             self.lineEdit.setText("")
@@ -170,6 +170,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.lineEdit.clear()
 
     def on_edit_ok(self, widget):
+        # Change box names
+
+
         # Change bulletpoint buttons texts
         bulletPoints = self.groupBox.findChildren(bulletPoint.BulletPoint)
         lineEdits = widget.sorted_children()
@@ -177,11 +180,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             bullet.set_text(lineEdit.text())
 
         # Reorder the boxes
-        # DOESNT WORK SOMETIMES IDK WHY
         for i in range(len(lineEdits)):
             targetIndex = self.firstBoxIndex + i
             box = self.find_matching_box(lineEdits[i].text())
-            text = lineEdits[i].text()
             indexOfBox = self.boxes_layout.indexOf(box)
             if indexOfBox != targetIndex:
                 temp = self.boxes_layout.itemAt(targetIndex).widget()

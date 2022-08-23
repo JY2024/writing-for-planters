@@ -50,3 +50,6 @@ class CollapsableBox(QWidget):
     def toggle_checked(self):
         self.button.setChecked(not self.button.isChecked())
 
+    def set_text(self, text):
+        self.button.setText(text)
+
