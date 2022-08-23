@@ -35,7 +35,7 @@ class WorkSummary(QWidget):
         self.titleButton.clicked.connect(self.on_title_clicked)
 
     def on_title_clicked(self):
-        self.my_parent.open_work(self.titleButton.text())
+        self.my_parent.open_part(self.titleButton.text())
 
     def toggle_checkbox_visible(self):
         if self.checkBox.isVisible():
