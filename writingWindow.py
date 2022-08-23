@@ -9,9 +9,8 @@ from PyQt5.QtCore import (
     QSize
 )
 from PyQt5.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QLineEdit, QGroupBox, QPushButton, QScrollArea
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox
 )
-
 
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
@@ -41,6 +40,11 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.toggleBoxesButton = designFunctions.generate_button("Expand All", checkable=True)
         self.editButton = designFunctions.generate_button("Edit", checkable=False)
 
+        # Group box for collapsable boxes
+        self.box_for_boxes = QGroupBox()
+        self.boxes_layout = QVBoxLayout()
+        self.box_for_boxes.setLayout(self.boxes_layout)
+
         # Main Layout
         self.mainLayout = QVBoxLayout()
         self.mainLayout.addWidget(outline_label)
@@ -50,6 +54,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.mainLayout.addWidget(self.editButton)
         self.mainLayout.addWidget(story_label)
         self.mainLayout.addWidget(self.toggleBoxesButton)
+        self.mainLayout.addWidget(self.box_for_boxes)
 
         super().__init__(title, QSize(1000, 700), self.mainLayout)
 
@@ -73,9 +78,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             bullet = bulletPoint.BulletPoint(text, self)
             self.groupBoxLayout.addLayout(bullet)
             box = collapsableBox.CollapsableBox(text)
-            self.mainLayout.addWidget(box)
+            self.boxes_layout.addWidget(box)
             if self.firstBoxIndex == None:
-                self.firstBoxIndex = self.mainLayout.indexOf(box)
+                self.firstBoxIndex = self.boxes_layout.indexOf(box)
             self.lineEdit.setText("")
 
     # when button is clicked, show the checkboxes next to the bullet points
@@ -128,8 +133,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.revert_remove_mode()
 
     def find_matching_box(self, text):
-        for i in range(self.mainLayout.count()):
-            item = self.mainLayout.itemAt(i).widget()
+        for i in range(self.boxes_layout.count()):
+            item = self.boxes_layout.itemAt(i).widget()
             if item != None and item.text() == text:
                 return item
         return None
@@ -142,8 +147,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         cond = lambda bool: not bool if self.toggleBoxesButton.isChecked() else bool
         setTxt = lambda: "Collapse All" if self.toggleBoxesButton.isChecked() else "Expand All"
         self.toggleBoxesButton.setText(setTxt())
-        for i in range(self.mainLayout.count()):
-            item = self.mainLayout.itemAt(i).widget()
+        for i in range(self.boxes_layout.count()):
+            item = self.boxes_layout.itemAt(i).widget()
             if isinstance(item, collapsableBox.CollapsableBox) and cond(item.get_checked()):
                 item.toggle_checked()
                 item.button_was_clicked()
@@ -177,14 +182,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             targetIndex = self.firstBoxIndex + i
             box = self.find_matching_box(lineEdits[i].text())
             text = lineEdits[i].text()
-            indexOfBox = self.mainLayout.indexOf(box)
+            indexOfBox = self.boxes_layout.indexOf(box)
             if indexOfBox != targetIndex:
-                temp = self.mainLayout.itemAt(targetIndex).widget()
-                self.mainLayout.takeAt(targetIndex)
-                self.mainLayout.takeAt(indexOfBox)
-                self.mainLayout.insertWidget(targetIndex, box)
-                self.mainLayout.insertWidget(indexOfBox, temp)
-
-
-
-
+                temp = self.boxes_layout.itemAt(targetIndex).widget()
+                self.boxes_layout.takeAt(targetIndex)
+                self.boxes_layout.takeAt(indexOfBox)
+                self.boxes_layout.insertWidget(targetIndex, box)
+                self.boxes_layout.insertWidget(indexOfBox, temp)

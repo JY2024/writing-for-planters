@@ -1,7 +1,6 @@
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import QMainWindow, QWidget, QScrollArea, QLabel, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton
 
-import customDialog
 import partCreationWidget
 import removableItemsHolder
 import writingWindow

@@ -3,8 +3,6 @@ from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel
 
 import customDialog
 import workCreationWidget
-import workSummary
-
 
 class RemovableItemsHolder(QGroupBox):
     def __init__(self, remove_button, part_creation_widget, part_summary, part):
@@ -19,7 +17,7 @@ class RemovableItemsHolder(QGroupBox):
         self.parts = {}
 
     def on_create_clicked(self):
-        helper_widget = self.part_creation_widget()
+        helper_widget = self.part_creation_widget if isinstance(self.part_creation_widget, QLabel) else self.part_creation_widget()
         dlg = customDialog.CustomDialog(
             self, "Create", QSize(500, 500), helper_widget, self.on_create_ok, self.toggle_all_checkboxes
         )
