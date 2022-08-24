@@ -26,18 +26,19 @@ class RemovableItemsHolder(QGroupBox):
     def on_create_ok(self, widget):
         my_part_summary = None
         my_part = None
-        if isinstance(widget, workCreationWidget.WorkCreationWidget):
-            my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description())
-            my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description())
-        else:
-            my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
-            my_part = self.part(widget.get_title())
-        self.main_layout.addWidget(my_part_summary)
-        self.parts[widget.get_title()] = [my_part_summary, my_part]
+        if len(self.parts.keys()) == 0 or widget.get_title() not in self.parts:
+            if isinstance(widget, workCreationWidget.WorkCreationWidget):
+                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description())
+                my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description())
+            else:
+                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
+                my_part = self.part(widget.get_title())
+            self.main_layout.addWidget(my_part_summary)
+            self.parts[widget.get_title()] = [my_part_summary, my_part]
 
     def toggle_all_checkboxes(self):
-        for key, value in self.parts.items():
-            value[0].toggle_checkbox_visible()
+        for key in self.parts.keys():
+           self.parts[key][0].toggle_checkbox_visible()
 
     def open_part(self, title):
         self.parts[title][1].show()
