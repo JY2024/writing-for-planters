@@ -55,7 +55,7 @@ class RemovableItemsHolder(QGroupBox):
 
     def on_remove_ok(self):
         for title in list(self.parts):
-            summary = self.works[title][0]
+            summary = self.parts[title][0]
             if summary.is_checked():
                 self.main_layout.removeWidget(summary)
                 self.parts.pop(title)
