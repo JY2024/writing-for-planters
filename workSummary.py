@@ -5,9 +5,10 @@ import designFunctions
 
 
 class WorkSummary(QWidget):
-    def __init__(self, parent, title, tags, description):
+    def __init__(self, parent, title, tags, description, matching_part):
         super().__init__()
         self.my_parent = parent
+        self.matching_part = matching_part
 
         self.setMinimumSize(QSize(500, 500))
         self.setMaximumSize(QSize(500, 500))
@@ -33,6 +34,8 @@ class WorkSummary(QWidget):
         self.setLayout(self.main_layout)
 
         self.title_button.clicked.connect(self.on_title_clicked)
+        self.tag_label.textChanged.connect(self.on_text_changed)
+        self.description_label.textChanged.connect(self.on_text_changed)
 
     def on_title_clicked(self):
         self.my_parent.open_part(self.title_button.text())
@@ -48,3 +51,7 @@ class WorkSummary(QWidget):
 
     def get_title(self):
         return self.title_button.text()
+
+    def on_text_changed(self):
+        self.matching_part.set_tags(self.tag_label.toPlainText())
+        self.matching_part.set_description(self.description_label.toPlainText())

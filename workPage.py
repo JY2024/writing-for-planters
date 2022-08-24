@@ -39,3 +39,9 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.add_part_button.clicked.connect(self.removable_items.on_create_clicked)
         self.remove_button.clicked.connect(self.removable_items.on_remove_clicked)
 
+    def set_tags(self, text):
+        self.tag_label.setText(text)
+
+    def set_description(self, text):
+        self.description_label.setText(text)
+
