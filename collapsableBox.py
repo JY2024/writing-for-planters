@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import (
 
 
 class CollapsableBox(QWidget):
-    def __init__(self, text):
+    def __init__(self, text, id):
         # Set up
         super().__init__()
+        self.id = id
 
         self.textEdit = QTextEdit()
         self.textEdit.setMaximumHeight(0)
@@ -49,4 +50,17 @@ class CollapsableBox(QWidget):
 
     def toggle_checked(self):
         self.button.setChecked(not self.button.isChecked())
+
+    def set_text(self, text):
+        self.button.setText(text)
+
+    def get_id(self):
+        return self.id
+
+    def get_written_work(self):
+        return self.textEdit.toPlainText()
+
+    def set_writing(self, text):
+        self.textEdit.clear()
+        self.textEdit.setText(text)
 

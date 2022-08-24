@@ -2,8 +2,10 @@ from PyQt5.QtWidgets import QPushButton, QCheckBox, QHBoxLayout
 
 
 class BulletPoint(QHBoxLayout):
-    def __init__(self, text, my_parent):
+    def __init__(self, text, my_parent, my_box, id):
+        self.id = id
         self.my_parent = my_parent
+        self.my_box = my_box
         super().__init__(my_parent)
         self.button = QPushButton(text)
         self.checkBox = QCheckBox()
@@ -40,3 +42,12 @@ class BulletPoint(QHBoxLayout):
 
     def set_text(self, text):
         self.button.setText(text)
+
+    def set_box_text(self, text):
+        self.my_box.set_text(text)
+
+    def matching_box(self):
+        return self.my_box
+
+    def get_id(self):
+        return self.id

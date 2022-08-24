@@ -9,10 +9,12 @@ class EditWindow(QWidget):
         self.setWindowTitle("Edit")
 
         self.mainLayout = QVBoxLayout()
+        self.bullets = bulletPoints
 
         # Set up labels
         for bullet in bulletPoints:
-            self.mainLayout.addWidget(draggableLabel.DraggableLabel(parent=self, text=bullet.get_text()))
+            label = draggableLabel.DraggableLabel(parent=self, text=bullet.get_text(), id=bullet.get_id())
+            self.mainLayout.addWidget(label)
 
         # Finish layout set up
         self.setLayout(self.mainLayout)
@@ -29,3 +31,8 @@ class EditWindow(QWidget):
     def sorted_children(self):
         labels = [self.mainLayout.itemAt(i).widget() for i in range(self.mainLayout.count())]
         return sorted(labels, key=lambda label: label.pos().y())
+
+    def on_text_changed(self, updated_text, changed_id):
+        bullet = next(x for x in self.bullets if x.get_id() == changed_id)
+        bullet.set_text(updated_text)
+        bullet.set_box_text(updated_text)
