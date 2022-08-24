@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel
 
 import customDialog
@@ -13,7 +13,6 @@ class RemovableItemsHolder(QGroupBox):
         self.remove_button = remove_button
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
-
         self.parts = {}
 
     def on_create_clicked(self):
@@ -62,13 +61,5 @@ class RemovableItemsHolder(QGroupBox):
                 self.parts.pop(title)
         self.toggle_all_checkboxes()
 
-    def on_enter_edit_ok(self):
-        pass
-
-    def on_edit_ok(self):
-        pass
-
-    def on_edit_reject(self):
-        pass
 
 

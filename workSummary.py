@@ -20,9 +20,9 @@ class WorkSummary(QWidget):
         self.check_box = QCheckBox()
         self.check_box.hide()
         self.top_layout.addWidget(self.check_box)
-        self.tag_label = designFunctions.generate_label(tags, border=True, font_size="14px", background_color="white",
+        self.tag_label = designFunctions.generate_textEdit(tags, border=True, font_size="14px", background_color="white",
                                                        size=QSize(400, 200))
-        self.description_label = designFunctions.generate_label(description, border=True, font_size="14px",
+        self.description_label = designFunctions.generate_textEdit(description, border=True, font_size="14px",
                                                                background_color="white", size=QSize(400, 200))
 
         self.main_layout = QVBoxLayout()
@@ -48,4 +48,3 @@ class WorkSummary(QWidget):
 
     def get_title(self):
         return self.title_button.text()
-
