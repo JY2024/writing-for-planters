@@ -1,3 +1,5 @@
+from PyQt5.QtGui import QKeySequence
+
 import collapsableBox
 import bulletPoint
 import customDialog
@@ -6,10 +8,10 @@ import designFunctions
 import scrollableWindow
 
 from PyQt5.QtCore import (
-    QSize
+    QSize, Qt
 )
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut
 )
 
 # Writing window
@@ -17,7 +19,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
         self.num_parts = 0
         # Outline and Story labels
-        outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
+        self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
         story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
 
         # Line Edit
@@ -36,7 +38,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         outline_layout.addWidget(self.group_box)
 
         # Buttons
-        self.enter_button = designFunctions.generate_button("Enter", checkable=False)
+        self.enter_button = designFunctions.generate_button("&Enter", checkable=False)
         self.remove_button = designFunctions.generate_button("Remove", checkable=True)
         self.toggle_boxes_button = designFunctions.generate_button("Expand All", checkable=True)
         self.edit_button = designFunctions.generate_button("Edit", checkable=False)
@@ -48,7 +50,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
         # Main Layout
         self.main_layout = QVBoxLayout()
-        self.main_layout.addWidget(outline_label)
+        self.main_layout.addWidget(self.outline_label)
         self.main_layout.addLayout(outline_layout)
         self.main_layout.addWidget(self.enter_button)
         self.main_layout.addWidget(self.remove_button)
@@ -64,6 +66,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.remove_button.clicked.connect(self.remove_was_clicked)
         self.toggle_boxes_button.clicked.connect(self.toggle_boxes_clicked)
         self.edit_button.clicked.connect(self.on_enter_edit_ok)
+
+        # Shortcuts
+        to_top_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+O")), self)
+        to_top_shortcut.activated.connect(self.on_to_top)
 
         self.first_box_index = None
 
@@ -193,3 +199,6 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
                 box.set_text(temp_title)
                 box.set_writing(temp_text)
+
+    def on_to_top(self):
+        self.scroll.ensureWidgetVisible(self.outline_label)
