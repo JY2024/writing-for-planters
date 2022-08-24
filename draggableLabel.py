@@ -13,6 +13,8 @@ class DraggableLabel(QLineEdit):
         self.setStyleSheet("border: 1px solid black; background-color: white")
         self.drag_start_pos = None
 
+        self.textChanged.connect(self.on_text_changed)
+
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if event.button() == Qt.LeftButton:
@@ -31,5 +33,8 @@ class DraggableLabel(QLineEdit):
         self.drag_start_pos = None
         self.parent().on_mouse_release()
 
-    def id(self):
+    def on_text_changed(self):
+        self.parent().on_text_changed(self.text(), self.id)
+
+    def get_id(self):
         return self.id

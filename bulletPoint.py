@@ -46,5 +46,8 @@ class BulletPoint(QHBoxLayout):
     def set_box_text(self, text):
         self.my_box.set_text(text)
 
-    def id(self):
+    def matching_box(self):
+        return self.my_box
+
+    def get_id(self):
         return self.id

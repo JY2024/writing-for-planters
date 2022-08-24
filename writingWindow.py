@@ -77,7 +77,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             dlg.exec()
         else:
             self.num_parts += 1
-            box = collapsableBox.CollapsableBox(text)
+            box = collapsableBox.CollapsableBox(text, self.num_parts)
             self.boxes_layout.addWidget(box)
             bullet = bulletPoint.BulletPoint(text, self, box, self.num_parts)
             self.groupBoxLayout.addLayout(bullet)
@@ -172,23 +172,24 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.lineEdit.clear()
 
     def on_edit_ok(self, widget):
-        # Change box names
-
-
         # Change bulletpoint buttons texts
         bulletPoints = self.groupBox.findChildren(bulletPoint.BulletPoint)
         lineEdits = widget.sorted_children()
         for (bullet, lineEdit) in zip(bulletPoints, lineEdits):
             bullet.set_text(lineEdit.text())
 
-        # Reorder the boxes
+        # Change the box texts
         for i in range(len(lineEdits)):
             targetIndex = self.firstBoxIndex + i
             box = self.find_matching_box(lineEdits[i].text())
             indexOfBox = self.boxes_layout.indexOf(box)
             if indexOfBox != targetIndex:
                 temp = self.boxes_layout.itemAt(targetIndex).widget()
-                self.boxes_layout.takeAt(targetIndex)
-                self.boxes_layout.takeAt(indexOfBox)
-                self.boxes_layout.insertWidget(targetIndex, box)
-                self.boxes_layout.insertWidget(indexOfBox, temp)
+                temp_title = temp.text()
+                temp_text = temp.get_written_work()
+
+                temp.set_text(box.text())
+                temp.set_writing(box.get_written_work())
+
+                box.set_text(temp_title)
+                box.set_writing(temp_text)
