@@ -1,7 +1,7 @@
 import designFunctions
 from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation, QSize
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QPushButton, QTextEdit, QWidget, QSizePolicy
+    QVBoxLayout, QTextEdit, QWidget, QSizePolicy
 )
 
 
@@ -11,21 +11,21 @@ class CollapsableBox(QWidget):
         super().__init__()
         self.id = id
 
-        self.textEdit = QTextEdit()
-        self.textEdit.setMaximumHeight(0)
-        self.textEdit.setMinimumHeight(0)
-        self.textEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.text_edit = QTextEdit()
+        self.text_edit.setMaximumHeight(0)
+        self.text_edit.setMinimumHeight(0)
+        self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.animation_group = QParallelAnimationGroup(self)
 
         layout = QVBoxLayout(self)
         self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
 
         layout.addWidget(self.button)
-        layout.addWidget(self.textEdit)
+        layout.addWidget(self.text_edit)
 
         # Animation
-        content_height = self.textEdit.sizeHint().height()
-        self.content_animation = QPropertyAnimation(self.textEdit, b"maximumHeight")
+        content_height = self.text_edit.sizeHint().height()
+        self.content_animation = QPropertyAnimation(self.text_edit, b"maximumHeight")
         self.content_animation.setDuration(500)
         self.content_animation.setStartValue(0)
         self.content_animation.setEndValue(content_height)
@@ -58,9 +58,9 @@ class CollapsableBox(QWidget):
         return self.id
 
     def get_written_work(self):
-        return self.textEdit.toPlainText()
+        return self.text_edit.toPlainText()
 
     def set_writing(self, text):
-        self.textEdit.clear()
-        self.textEdit.setText(text)
+        self.text_edit.clear()
+        self.text_edit.setText(text)
 

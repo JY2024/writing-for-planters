@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QPushButton, QCheckBox, QHBoxLayout
 
-
 class BulletPoint(QHBoxLayout):
     def __init__(self, text, my_parent, my_box, id):
         self.id = id
@@ -8,10 +7,10 @@ class BulletPoint(QHBoxLayout):
         self.my_box = my_box
         super().__init__(my_parent)
         self.button = QPushButton(text)
-        self.checkBox = QCheckBox()
+        self.check_box = QCheckBox()
         self.addWidget(self.button)
-        self.addWidget(self.checkBox)
-        self.checkBox.hide()
+        self.addWidget(self.check_box)
+        self.check_box.hide()
 
         self.button.clicked.connect(self.on_clicked)
 
@@ -19,23 +18,23 @@ class BulletPoint(QHBoxLayout):
         self.my_parent.bulletPoint_was_clicked(self)
 
     def toggle_checkbox(self):
-        if self.checkBox.isVisible():
-            self.checkBox.hide()
+        if self.check_box.isVisible():
+            self.check_box.hide()
         else:
-            self.checkBox.show()
+            self.check_box.show()
 
     def checkBox_selected(self):
-        return self.checkBox.isChecked()
+        return self.check_box.isChecked()
 
     def text(self):
         return self.button.text()
 
-    def removeItems(self):
+    def remove_items(self):
         self.removeWidget(self.button)
-        self.removeWidget(self.checkBox)
+        self.removeWidget(self.check_box)
 
     def uncheck(self):
-        self.checkBox.setChecked(False)
+        self.check_box.setChecked(False)
 
     def get_text(self):
         return self.button.text()

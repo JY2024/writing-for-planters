@@ -14,7 +14,7 @@ def generate_button(text="", background_color="light grey", font_size="15px", bo
 
 def general_visual_setup(widget, background_color, font_size, bold, border, size):
     font = font_size if not bold else ("bold " + font_size)
-    style_sheet = "background-color: " + background_color + "; font: " + font_size
+    style_sheet = "background-color: " + background_color + "; font: " + font
     if border:
         style_sheet += "; border: 1px solid black"
     widget.setStyleSheet(style_sheet)

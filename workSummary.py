@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QCheckBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox
 
 import designFunctions
 
@@ -12,40 +12,40 @@ class WorkSummary(QWidget):
         self.setMinimumSize(QSize(500, 500))
         self.setMaximumSize(QSize(500, 500))
 
-        self.topLayout = QHBoxLayout()
+        self.top_layout = QHBoxLayout()
 
-        self.titleButton = designFunctions.generate_button(title, background_color="yellow", border=True, bold=True,
+        self.title_button = designFunctions.generate_button(title, background_color="yellow", border=True, bold=True,
                                                            font_size="20px", size=QSize(200, 50))
-        self.topLayout.addWidget(self.titleButton)
-        self.checkBox = QCheckBox()
-        self.checkBox.hide()
-        self.topLayout.addWidget(self.checkBox)
-        self.tagLabel = designFunctions.generate_label(tags, border=True, font_size="14px", background_color="white",
+        self.top_layout.addWidget(self.title_button)
+        self.check_box = QCheckBox()
+        self.check_box.hide()
+        self.top_layout.addWidget(self.check_box)
+        self.tag_label = designFunctions.generate_label(tags, border=True, font_size="14px", background_color="white",
                                                        size=QSize(400, 200))
-        self.descriptionLabel = designFunctions.generate_label(description, border=True, font_size="14px",
+        self.description_label = designFunctions.generate_label(description, border=True, font_size="14px",
                                                                background_color="white", size=QSize(400, 200))
 
-        self.mainLayout = QVBoxLayout()
+        self.main_layout = QVBoxLayout()
 
-        self.mainLayout.addLayout(self.topLayout)
-        self.mainLayout.addWidget(self.tagLabel)
-        self.mainLayout.addWidget(self.descriptionLabel)
-        self.setLayout(self.mainLayout)
+        self.main_layout.addLayout(self.top_layout)
+        self.main_layout.addWidget(self.tag_label)
+        self.main_layout.addWidget(self.description_label)
+        self.setLayout(self.main_layout)
 
-        self.titleButton.clicked.connect(self.on_title_clicked)
+        self.title_button.clicked.connect(self.on_title_clicked)
 
     def on_title_clicked(self):
-        self.my_parent.open_part(self.titleButton.text())
+        self.my_parent.open_part(self.title_button.text())
 
     def toggle_checkbox_visible(self):
-        if self.checkBox.isVisible():
-            self.checkBox.hide()
+        if self.check_box.isVisible():
+            self.check_box.hide()
         else:
-            self.checkBox.show()
+            self.check_box.show()
 
     def is_checked(self):
-        return self.checkBox.isChecked()
+        return self.check_box.isChecked()
 
     def get_title(self):
-        return self.titleButton.text()
+        return self.title_button.text()
 

@@ -1,7 +1,7 @@
 import designFunctions
 
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit
 
 
 class PartCreationWidget(QWidget):
