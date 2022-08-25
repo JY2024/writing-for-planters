@@ -38,6 +38,7 @@ class CollapsableBox(QWidget):
         self.content_animation.setEndValue(content_height)
 
         self.button.clicked.connect(self.button_was_clicked)
+        self.comment_button.clicked.connect(self.on_comment_button_clicked)
 
         self.setLayout(layout)
 
@@ -70,4 +71,7 @@ class CollapsableBox(QWidget):
     def set_writing(self, text):
         self.text_edit.clear()
         self.text_edit.setText(text)
+
+    def on_comment_button_clicked(self):
+        pass
 
