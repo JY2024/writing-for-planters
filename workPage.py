@@ -1,7 +1,9 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QDialog, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 import partCreationWidget
 import removableItemsHolder
@@ -22,6 +24,10 @@ class Popup(scrollableWindow.ScrollableWindow):
 
 class WorkPage(scrollableWindow.ScrollableWindow):
     def __init__(self, title, tags, description):
+        self.gauth = GoogleAuth()
+        self.authorized = False
+        self.drive = None
+
         self.export_button = designFunctions.generate_button("Export")
         self.preview_button = designFunctions.generate_button("Preview")
         self.title_label = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
@@ -54,8 +60,6 @@ class WorkPage(scrollableWindow.ScrollableWindow):
 
         self.popups = []
         self.mode_msg = QMessageBox()
-        # self.download_button = QPushButton("Download/Print")
-        # self.upload_button = QPushButton("Upload to GDrive")
         self.mode_msg.setWindowTitle("Export")
         self.mode_msg.addButton(QPushButton("Download/Print"), QMessageBox.YesRole)
         self.mode_msg.addButton(QPushButton("Upload to GDrive"), QMessageBox.YesRole)
@@ -65,8 +69,6 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.remove_button.clicked.connect(self.removable_items.on_remove_clicked)
         self.export_button.clicked.connect(self.on_export)
         self.preview_button.clicked.connect(self.on_preview)
-        # self.download_button.clicked.connect(self.on_download)
-        # self.upload_button.clicked.connect(self.on_upload)
         self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
 
     def set_tags(self, text):
@@ -99,7 +101,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
     def on_mode_clicked(self, btn):
         if btn.text() == "Download/Print":
             self.on_print()
-        else:
+        elif btn.text() == "Upload to GDrive":
             self.on_upload()
 
     def on_print(self):
@@ -109,4 +111,11 @@ class WorkPage(scrollableWindow.ScrollableWindow):
             self.get_doc().print(dlg.printer())
 
     def on_upload(self):
-        pass
+        if not self.authorized:
+            self.gauth.LocalWebserverAuth()
+            self.authorized = True
+            self.drive = GoogleDrive(self.gauth)
+
+        file = self.drive.CreateFile({'title': self.title_label.text() + '.txt'})
+        file.SetContentString(self.get_all_text(self.removable_items.get_parts()))
+        file.Upload()
