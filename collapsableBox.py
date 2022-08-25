@@ -12,10 +12,17 @@ class CollapsableBox(QWidget):
         self.id = id
 
         self.text_edit = QTextEdit()
+        self.comment_text_edit = QTextEdit()
         self.text_edit.setMaximumHeight(0)
         self.text_edit.setMinimumHeight(0)
+        self.text_edit.setMaximumWidth(940)
         self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        self.animation_group = QParallelAnimationGroup(self)
+
+        self.comment_text_edit.setMaximumHeight(0)
+        self.comment_text_edit.setMinimumHeight(0)
+        self.comment_text_edit.setMaximumWidth(0)
+        self.comment_text_edit.setMinimumWidth(0)
+        self.comment_text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         layout = QVBoxLayout(self)
         self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
@@ -27,27 +34,55 @@ class CollapsableBox(QWidget):
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.button)
         self.top_layout.addWidget(self.comment_button)
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.addWidget(self.text_edit)
+        self.bottom_layout.addWidget(self.comment_text_edit)
         layout.addLayout(self.top_layout)
-        layout.addWidget(self.text_edit)
+        layout.addLayout(self.bottom_layout)
 
-        # Animation
+        # Animations
+        self.animation_group_vertical = QParallelAnimationGroup()
+        self.animation_group_horizontal = QParallelAnimationGroup()
         content_height = self.text_edit.sizeHint().height()
-        self.content_animation = QPropertyAnimation(self.text_edit, b"maximumHeight")
-        self.content_animation.setDuration(500)
-        self.content_animation.setStartValue(0)
-        self.content_animation.setEndValue(content_height)
+        self.content_animation_vertical = QPropertyAnimation(self.text_edit, b"maximumHeight")
+        self.content_animation_vertical.setDuration(500)
+        self.content_animation_vertical.setStartValue(0)
+        self.content_animation_vertical.setEndValue(content_height)
+
+        content_width = self.text_edit.maximumWidth()
+        self.content_animation_horizontal = QPropertyAnimation(self.text_edit, b"maximumWidth")
+        self.content_animation_horizontal.setDuration(500)
+        self.content_animation_horizontal.setStartValue(content_width)
+        self.content_animation_horizontal.setEndValue(content_width * 0.75)
+
+        self.comment_animation_vertical = QPropertyAnimation(self.comment_text_edit, b"maximumHeight")
+        self.comment_animation_vertical.setDuration(500)
+        self.comment_animation_vertical.setStartValue(0)
+        self.comment_animation_vertical.setEndValue(content_height)
+
+        comment_width = int(content_width * 0.25)
+        self.comment_animation_horizontal = QPropertyAnimation(self.comment_text_edit, b"maximumWidth")
+        self.comment_animation_horizontal.setDuration(500)
+        self.comment_animation_horizontal.setStartValue(0)
+        self.comment_animation_horizontal.setEndValue(comment_width)
+
+        self.animation_group_vertical.addAnimation(self.content_animation_vertical)
+        self.animation_group_vertical.addAnimation(self.comment_animation_vertical)
+        self.animation_group_horizontal.addAnimation(self.content_animation_horizontal)
+        self.animation_group_horizontal.addAnimation(self.comment_animation_horizontal)
 
         self.button.clicked.connect(self.button_was_clicked)
+        self.comment_button.clicked.connect(self.on_comment_button_clicked)
 
         self.setLayout(layout)
 
     def button_was_clicked(self):
         checked = self.get_checked()
         if checked:
-            self.content_animation.setDirection(QAbstractAnimation.Forward)
+            self.animation_group_vertical.setDirection(QAbstractAnimation.Forward)
         else:
-            self.content_animation.setDirection(QAbstractAnimation.Backward)
-        self.content_animation.start()
+            self.animation_group_vertical.setDirection(QAbstractAnimation.Backward)
+        self.animation_group_vertical.start()
 
     def text(self):
         return self.button.text()
@@ -71,3 +106,10 @@ class CollapsableBox(QWidget):
         self.text_edit.clear()
         self.text_edit.setText(text)
 
+    def on_comment_button_clicked(self):
+        checked = self.comment_button.isChecked()
+        if checked:
+            self.animation_group_horizontal.setDirection(QAbstractAnimation.Forward)
+        else:
+            self.animation_group_horizontal.setDirection(QAbstractAnimation.Backward)
+        self.animation_group_horizontal.start()
