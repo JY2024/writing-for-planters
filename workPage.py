@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QDialog, QMessageBox
 
 import partCreationWidget
 import removableItemsHolder
@@ -51,13 +51,23 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(self.removable_items)
 
         super().__init__(title, QSize(900, 700), self.main_layout)
-        
+
+        self.popups = []
+        self.mode_msg = QMessageBox()
+        # self.download_button = QPushButton("Download/Print")
+        # self.upload_button = QPushButton("Upload to GDrive")
+        self.mode_msg.setWindowTitle("Export")
+        self.mode_msg.addButton(QPushButton("Download/Print"), QMessageBox.YesRole)
+        self.mode_msg.addButton(QPushButton("Upload to GDrive"), QMessageBox.YesRole)
+        self.mode_msg.addButton(QPushButton("Cancel"), QMessageBox.RejectRole)
+
         self.add_part_button.clicked.connect(self.removable_items.on_create_clicked)
         self.remove_button.clicked.connect(self.removable_items.on_remove_clicked)
         self.export_button.clicked.connect(self.on_export)
         self.preview_button.clicked.connect(self.on_preview)
-
-        self.popups = []
+        # self.download_button.clicked.connect(self.on_download)
+        # self.upload_button.clicked.connect(self.on_upload)
+        self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
 
     def set_tags(self, text):
         self.tag_label.setText(text)
@@ -66,10 +76,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.description_label.setText(text)
 
     def on_export(self):
-        printer = QPrinter(mode=QPrinter.HighResolution)
-        dlg = QPrintDialog(printer, self)
-        if dlg.exec() == QPrintDialog.Accepted:
-            self.get_doc().print(dlg.printer())
+        self.mode_msg.show()
 
     def on_preview(self):
         self.popups.clear()
@@ -89,3 +96,17 @@ class WorkPage(scrollableWindow.ScrollableWindow):
             text += "\n" + parts[key][1].get_all_text()
         return text
 
+    def on_mode_clicked(self, btn):
+        if btn.text() == "Download/Print":
+            self.on_print()
+        else:
+            self.on_upload()
+
+    def on_print(self):
+        printer = QPrinter(mode=QPrinter.HighResolution)
+        dlg = QPrintDialog(printer, self)
+        if dlg.exec() == QPrintDialog.Accepted:
+            self.get_doc().print(dlg.printer())
+
+    def on_upload(self):
+        pass
