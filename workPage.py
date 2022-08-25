@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMainWindow, QTextEdit
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit
 
 import partCreationWidget
 import removableItemsHolder
@@ -18,8 +18,6 @@ class Popup(scrollableWindow.ScrollableWindow):
         self.layout.addWidget(self.text_edit)
 
         super().__init__("Preview", QSize(1000, 700), self.layout)
-
-
 
 class WorkPage(scrollableWindow.ScrollableWindow):
     def __init__(self, title, tags, description):
@@ -70,19 +68,19 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         printer = QPrinter(mode=QPrinter.HighResolution)
         dlg = QPrintDialog(printer, self)
         if dlg.exec() == QPrintDialog.Accepted:
-            self.handle_print()
-
-    def handle_print(self):
-        pass
+            self.get_doc().print(dlg.printer())
 
     def on_preview(self):
         self.popups.clear()
+        popup = Popup(self.get_doc())
+        popup.show()
+        self.popups.append(popup)
+
+    def get_doc(self):
         text = self.get_all_text(self.removable_items.get_parts())
         doc = QTextDocument()
         doc.setPlainText(text)
-        popup = Popup(doc)
-        popup.show()
-        self.popups.append(popup)
+        return doc
 
     def get_all_text(self, parts):
         text = ""
