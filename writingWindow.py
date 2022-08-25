@@ -17,7 +17,6 @@ from PyQt5.QtWidgets import (
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
-        self.folder_path = folder_path
         self.num_parts = 0
         # Outline and Story labels
         self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
@@ -203,3 +202,11 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
     def on_to_top(self):
         self.scroll.ensureWidgetVisible(self.outline_label)
+
+    def get_all_text(self):
+        text = ""
+        for i in range(self.boxes_layout.count()):
+            item = self.boxes_layout.itemAt(i).widget()
+            if item != None:
+                text += "\n" + item.get_written_work()
+        return text

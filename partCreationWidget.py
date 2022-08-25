@@ -1,3 +1,5 @@
+from PyQt5.QtGui import QTextDocument
+
 import designFunctions
 
 from PyQt5.QtCore import QSize
@@ -22,4 +24,6 @@ class PartCreationWidget(QWidget):
         return self.title.text()
 
     def get_description(self):
-        return self.synopsis.toPlainText()
+        doc = QTextDocument()
+        doc.setPlainText(self.synopsis.toPlainText())
+        return doc
