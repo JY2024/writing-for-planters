@@ -12,10 +12,14 @@ class CollapsableBox(QWidget):
         self.id = id
 
         self.text_edit = QTextEdit()
+        self.comment_text_edit = QTextEdit()
         self.text_edit.setMaximumHeight(0)
         self.text_edit.setMinimumHeight(0)
+        self.text_edit.setMaximumWidth(940)
         self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        self.animation_group = QParallelAnimationGroup(self)
+
+        self.comment_text_edit.setMaximumWidth(self.text_edit.maximumWidth() * 0.25)
+        self.comment_text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         layout = QVBoxLayout(self)
         self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
@@ -27,15 +31,24 @@ class CollapsableBox(QWidget):
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.button)
         self.top_layout.addWidget(self.comment_button)
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.addWidget(self.text_edit)
+        self.bottom_layout.addWidget(self.comment_text_edit)
         layout.addLayout(self.top_layout)
-        layout.addWidget(self.text_edit)
+        layout.addLayout(self.bottom_layout)
 
-        # Animation
+        # Animations
         content_height = self.text_edit.sizeHint().height()
         self.content_animation = QPropertyAnimation(self.text_edit, b"maximumHeight")
         self.content_animation.setDuration(500)
         self.content_animation.setStartValue(0)
         self.content_animation.setEndValue(content_height)
+
+        content_width = self.text_edit.maximumWidth()
+        self.comment_animation = QPropertyAnimation(self.text_edit, b"maximumWidth")
+        self.comment_animation.setDuration(500)
+        self.comment_animation.setStartValue(content_width)
+        self.comment_animation.setEndValue(content_width * 0.75)
 
         self.button.clicked.connect(self.button_was_clicked)
         self.comment_button.clicked.connect(self.on_comment_button_clicked)
@@ -73,5 +86,9 @@ class CollapsableBox(QWidget):
         self.text_edit.setText(text)
 
     def on_comment_button_clicked(self):
-        pass
-
+        checked = self.comment_button.isChecked()
+        if checked:
+            self.comment_animation.setDirection(QAbstractAnimation.Forward)
+        else:
+            self.comment_animation.setDirection(QAbstractAnimation.Backward)
+        self.comment_animation.start()
