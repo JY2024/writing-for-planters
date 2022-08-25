@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QDialog, QMainWindow, QTextEdit
 
 import partCreationWidget
 import removableItemsHolder
@@ -8,6 +9,16 @@ import writingWindow
 import partSummary
 import designFunctions
 import scrollableWindow
+
+class Popup(scrollableWindow.ScrollableWindow):
+    def __init__(self, doc):
+        self.layout = QVBoxLayout()
+        self.text_edit = QTextEdit()
+        self.text_edit.setDocument(doc)
+        self.layout.addWidget(self.text_edit)
+
+        super().__init__("Preview", QSize(1000, 700), self.layout)
+
 
 
 class WorkPage(scrollableWindow.ScrollableWindow):
@@ -47,6 +58,8 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.export_button.clicked.connect(self.on_export)
         self.preview_button.clicked.connect(self.on_preview)
 
+        self.popups = []
+
     def set_tags(self, text):
         self.tag_label.setText(text)
 
@@ -60,8 +73,20 @@ class WorkPage(scrollableWindow.ScrollableWindow):
             self.handle_print()
 
     def handle_print(self):
-        parts = self.removable_items.get_parts()
+        pass
 
     def on_preview(self):
-        pass
+        self.popups.clear()
+        text = self.get_all_text(self.removable_items.get_parts())
+        doc = QTextDocument()
+        doc.setPlainText(text)
+        popup = Popup(doc)
+        popup.show()
+        self.popups.append(popup)
+
+    def get_all_text(self, parts):
+        text = ""
+        for key in parts.keys():
+            text += "\n" + parts[key][1].get_all_text()
+        return text
 

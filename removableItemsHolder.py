@@ -32,7 +32,7 @@ class RemovableItemsHolder(QGroupBox):
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
             else:
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
-                my_part = self.part(widget.get_title(), )
+                my_part = self.part(widget.get_title())
             self.main_layout.addWidget(my_part_summary)
             self.parts[widget.get_title()] = [my_part_summary, my_part]
 
@@ -63,7 +63,7 @@ class RemovableItemsHolder(QGroupBox):
         self.toggle_all_checkboxes()
 
     def get_parts(self):
-        pass
+        return self.parts
 
 
 
