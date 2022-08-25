@@ -17,15 +17,6 @@ class BulletPoint(QHBoxLayout):
     def on_clicked(self):
         self.my_parent.bulletPoint_was_clicked(self)
 
-    def toggle_checkbox(self):
-        if self.check_box.isVisible():
-            self.check_box.hide()
-        else:
-            self.check_box.show()
-
-    def checkBox_selected(self):
-        return self.check_box.isChecked()
-
     def text(self):
         return self.button.text()
 

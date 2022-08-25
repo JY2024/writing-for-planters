@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, QTextEdit, QWidget, QSizePolicy, QHBoxLayout, QStyle
 )
 
-
 class CollapsableBox(QWidget):
     def __init__(self, text, id):
         # Set up

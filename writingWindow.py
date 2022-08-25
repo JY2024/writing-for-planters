@@ -6,6 +6,7 @@ import customDialog
 import editWindow
 import designFunctions
 import scrollableWindow
+import checkboxFunctions
 
 from PyQt5.QtCore import (
     QSize, Qt
@@ -109,7 +110,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     # returns whether at least one bullet point is checked off
     def at_least_one_checked(self):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
-            if bullet.checkBox_selected():
+            if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(bullet)):
                 return True
         return False
 
@@ -123,7 +124,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
     def toggle_all_checkboxes(self):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
-            bullet.toggle_checkbox()
+            checkboxFunctions.toggle_checkbox_visible(checkboxFunctions.get_checkbox(bullet))
 
     def uncheck_all(self):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
@@ -132,7 +133,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
     def on_delete_ok(self):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
-            if bullet.checkBox_selected():
+            if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(bullet)):
                 box = self.find_matching_box(bullet.get_text())
                 if box != None:
                     self.main_layout.removeWidget(box)

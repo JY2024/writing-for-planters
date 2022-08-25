@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel, QFileDialog
 
 import customDialog
 import workCreationWidget
+import checkboxFunctions
 
 class RemovableItemsHolder(QGroupBox):
     def __init__(self, remove_button, part_creation_widget, part_summary, part):
@@ -39,7 +40,7 @@ class RemovableItemsHolder(QGroupBox):
 
     def toggle_all_checkboxes(self):
         for key in self.parts.keys():
-           self.parts[key][0].toggle_checkbox_visible()
+           checkboxFunctions.toggle_checkbox_visible(checkboxFunctions.get_checkbox(self.parts[key][0]))
 
     def open_part(self, title):
         self.parts[title][1].show()
@@ -58,7 +59,7 @@ class RemovableItemsHolder(QGroupBox):
     def on_remove_ok(self):
         for title in list(self.parts):
             summary = self.parts[title][0]
-            if summary.is_checked():
+            if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(summary)):
                 self.main_layout.removeWidget(summary)
                 self.parts.pop(title)
         self.toggle_all_checkboxes()

@@ -36,12 +36,3 @@ class PartSummary(QWidget):
 
     def on_title_clicked(self):
         self.my_parent.open_part(self.title)
-
-    def toggle_checkbox_visible(self):
-        if self.check_box.isVisible():
-            self.check_box.hide()
-        else:
-            self.check_box.show()
-
-    def is_checked(self):
-        return self.check_box.isChecked()
