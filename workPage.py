@@ -58,5 +58,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         text = self.gather_text(self.removable_items.get_parts())
         if self.file_path == None:
             pass
+        else:
+            pass
 
 
