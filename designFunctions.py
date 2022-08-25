@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QTextDocument
 from PyQt5.QtWidgets import QLabel, QPushButton, QTextEdit
 
 
@@ -14,9 +15,10 @@ def generate_button(text="", background_color="light grey", font_size="15px", bo
     button.setCheckable(checkable)
     return general_visual_setup(button, background_color, font_size, bold, border, size)
 
-def generate_textEdit(text="", background_color="light grey", font_size="20px", bold=False, border=False,
+def generate_textEdit(doc=QTextDocument(""), background_color="light grey", font_size="20px", bold=False, border=False,
                       size=QSize(870, 50), alignment=Qt.AlignLeft, read_only=False):
-    text_edit = QTextEdit(text)
+    text_edit = QTextEdit()
+    text_edit.setDocument(doc)
     text_edit.setAlignment(alignment)
     text_edit.setReadOnly(read_only)
     return general_visual_setup(text_edit, background_color, font_size, bold, border, size)

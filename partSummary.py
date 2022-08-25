@@ -23,7 +23,7 @@ class PartSummary(QWidget):
         self.check_box = QCheckBox()
         self.check_box.hide()
         self.top_layout.addWidget(self.check_box)
-        self.synopsis_label = designFunctions.generate_label(synopsis, font_size="14px", border=True,
+        self.synopsis_label = designFunctions.generate_textEdit(doc=synopsis, font_size="14px", border=True,
                                                             background_color="white", size=QSize(400, 200))
 
         self.main_layout = QVBoxLayout()

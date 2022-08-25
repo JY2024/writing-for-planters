@@ -15,6 +15,7 @@ class Popup(scrollableWindow.ScrollableWindow):
         self.layout = QVBoxLayout()
         self.text_edit = QTextEdit()
         self.text_edit.setDocument(doc)
+        self.text_edit.setReadOnly(True)
         self.layout.addWidget(self.text_edit)
 
         super().__init__("Preview", QSize(1000, 700), self.layout)
@@ -25,10 +26,10 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.preview_button = designFunctions.generate_button("Preview")
         self.title_label = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
 
-        self.tag_label = designFunctions.generate_label(tags, font_size="14px", border=True, size=QSize(800, 200),
-                                                       background_color="white")
-        self.description_label = designFunctions.generate_label(description, font_size="14px", border=True,
-                                                               size=QSize(800, 200), background_color="white")
+        self.tag_label = designFunctions.generate_textEdit(tags, font_size="14px", border=True, size=QSize(800, 200),
+                                                       background_color="white", read_only=True)
+        self.description_label = designFunctions.generate_textEdit(description, font_size="14px", border=True,
+                                                               size=QSize(800, 200), background_color="white", read_only=True)
         self.add_part_button = QPushButton("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 

@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QTextDocument
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit, QLabel
 
 import designFunctions
@@ -25,7 +26,11 @@ class WorkCreationWidget(QWidget):
         return self.title.text()
 
     def get_tags(self):
-        return self.tags.toPlainText()
+        doc = QTextDocument()
+        doc.setPlainText(self.tags.toPlainText())
+        return doc
 
     def get_description(self):
-        return self.description.toPlainText()
+        doc = QTextDocument()
+        doc.setPlainText(self.description.toPlainText())
+        return doc

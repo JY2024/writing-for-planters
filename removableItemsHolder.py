@@ -27,10 +27,11 @@ class RemovableItemsHolder(QGroupBox):
         my_part = None
         if len(self.parts.keys()) == 0 or widget.get_title() not in self.parts:
             if isinstance(widget, workCreationWidget.WorkCreationWidget):
-
+                # For creating a work summary in works window
                 my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description())
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
             else:
+                # For creating a part summary in a work page
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
                 my_part = self.part(widget.get_title())
             self.main_layout.addWidget(my_part_summary)
