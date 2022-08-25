@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
+        self.folder_path = folder_path
         self.num_parts = 0
         # Outline and Story labels
         self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
