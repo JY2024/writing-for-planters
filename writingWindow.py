@@ -14,7 +14,7 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication,
-    QColorDialog
+    QColorDialog, QAction
 )
 
 # Writing window
@@ -45,6 +45,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.remove_button = designFunctions.generate_button("Remove", checkable=True)
         self.toggle_boxes_button = designFunctions.generate_button("Expand All", checkable=True)
         self.edit_button = designFunctions.generate_button("Edit", checkable=False)
+        self.placeholders_button = designFunctions.generate_button("Manage Placeholders")
 
         # Group box for collapsable boxes
         self.box_for_boxes = QGroupBox()
@@ -59,7 +60,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(self.remove_button)
         self.main_layout.addWidget(self.edit_button)
         self.main_layout.addWidget(story_label)
-        self.main_layout.addWidget(self.toggle_boxes_button)
+        self.below_story_layout = QHBoxLayout()
+        self.below_story_layout.addWidget(self.toggle_boxes_button)
+        self.below_story_layout.addWidget(self.placeholders_button)
+        self.main_layout.addLayout(self.below_story_layout)
         self.main_layout.addWidget(self.box_for_boxes)
 
         super().__init__(title, QSize(1000, 700), self.main_layout)
@@ -71,6 +75,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.remove_button.clicked.connect(self.remove_was_clicked)
         self.toggle_boxes_button.clicked.connect(self.toggle_boxes_clicked)
         self.edit_button.clicked.connect(self.on_enter_edit_ok)
+        self.placeholders_button.clicked.connect(self.on_placeholders_manage)
 
         # Shortcuts
         to_top_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+O")), self)
@@ -238,13 +243,20 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         y = max(smallest.y(), min(pos.y(), greatest.y()))
         return QPoint(x, y)
 
+    def on_placeholders_manage(self):
+        self.placeholders.set_add_new(False)
+        self.placeholders.popup(QCursor.pos())
+        # MAke sure pressing the things won't do anything
+
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):
         super().__init__()
         self.setTitle("Placeholders")
         self.parent = parent
-        self.addAction("Add new", self.add_new)
+        self.add_new_action = QAction("Add new")
+        self.add_new_action.triggered.connect(self.add_new)
+        self.addAction(self.add_new_action)
 
         self.placeholders = {}
         self.cur_box = None
@@ -275,5 +287,15 @@ class PlaceHolderMechanism(QMenu):
         self.cur_box.set_text_color(QColor(0, 0, 0))
 
     def triggered(self, action):
-        self.add_to_existing(action.text())
+        print("action text is ", action.text())
+        if action.text() != "Add new":
+            if not self.add_new_action.isEnabled():
+                self.on_show_placeholders_positions(action)
+            else:
+                self.add_to_existing(action.text())
 
+    def set_add_new(self, enabled):
+        self.add_new_action.setEnabled(enabled)
+
+    def on_show_placeholders_positions(self, action):
+        self.set_add_new(True)
