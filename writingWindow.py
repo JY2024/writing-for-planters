@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtGui import QKeySequence, QKeyEvent
+from PyQt5.QtGui import QKeySequence, QKeyEvent, QCursor
 
 import collapsableBox
 import bulletPoint
@@ -10,10 +10,10 @@ import scrollableWindow
 import checkboxFunctions
 
 from PyQt5.QtCore import (
-    QSize, Qt
+    QSize, Qt, QPoint
 )
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication
 )
 
 # Writing window
@@ -61,7 +61,6 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(story_label)
         self.main_layout.addWidget(self.toggle_boxes_button)
         self.main_layout.addWidget(self.box_for_boxes)
-        self.main_layout.addWidget(self.placeholders)
 
         super().__init__(title, QSize(1000, 700), self.main_layout)
 
@@ -225,16 +224,29 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         return None
 
     def on_placeholder_requested(self):
-        current_box = self.get_current_box()
-        position = self.mapToGlobal(current_box.mapToGlobal(current_box.text_edit.pos()))
-        self.placeholders.show_menu(position)
+        if self.first_box_index != None:
+            first_box = self.boxes_layout.itemAt(self.first_box_index)
+            if first_box != None:
+                cur_box = self.get_current_box()
+                pos = QCursor.pos()
+                self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()))
 
-class PlaceHolderMechanism(QComboBox):
+    def clamp(self, pos, smallest, greatest):
+        x = max(smallest.x(), min(pos.x(), greatest.x()))
+        y = max(smallest.y(), min(pos.y(), greatest.y()))
+        return QPoint(x, y)
+
+
+class PlaceHolderMechanism(QMenu):
     def __init__(self):
         super().__init__()
-        self.hide()
+        self.setTitle("Placeholders")
+        self.addAction("Add new", self.add_new)
+
+        self.placeholders = {}
 
     def show_menu(self, pos):
-        print("entered show menu") # Why didn't it move to the correct spot??
-        self.move(pos)
-        self.show()
+        self.popup(pos)
+
+    def add_new(self):
+        dlg =
