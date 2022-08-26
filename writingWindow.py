@@ -128,7 +128,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
     def uncheck_all(self):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
-            if bullet.checkBox_selected():
+            if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(bullet)):
                 bullet.uncheck()
 
     def on_delete_ok(self):
