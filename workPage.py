@@ -39,7 +39,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.add_part_button = QPushButton("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 
-        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.remove_button,
+        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.add_part_button, self.remove_button,
                                                                          partCreationWidget.PartCreationWidget,
                                                                          partSummary.PartSummary,
                                                                          writingWindow.WritingWindow)

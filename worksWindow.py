@@ -18,7 +18,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
 
         super().__init__("Works", QSize(900, 700), self.layout)
 
-        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.remove_button,
+        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.create_button, self.remove_button,
                                                                          workCreationWidget.WorkCreationWidget,
                                                                          workSummary.WorkSummary, workPage.WorkPage)
 
