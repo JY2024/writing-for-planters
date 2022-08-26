@@ -112,3 +112,9 @@ class CollapsableBox(QWidget):
         else:
             self.animation_group_horizontal.setDirection(QAbstractAnimation.Backward)
         self.animation_group_horizontal.start()
+
+    def set_text_color(self, color):
+        self.text_edit.setTextColor(color)
+
+    def append_text(self, text):
+        self.text_edit.insertPlainText(text)

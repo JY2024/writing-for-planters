@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtGui import QKeySequence, QKeyEvent, QCursor
+from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor
 
 import collapsableBox
 import bulletPoint
@@ -13,14 +13,14 @@ from PyQt5.QtCore import (
     QSize, Qt, QPoint
 )
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication,
+    QColorDialog
 )
 
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
         self.num_parts = 0
-        self.placeholders = PlaceHolderMechanism()
         # Outline and Story labels
         self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
         story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
@@ -63,6 +63,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(self.box_for_boxes)
 
         super().__init__(title, QSize(1000, 700), self.main_layout)
+
+        self.placeholders = PlaceHolderMechanism(self)
 
         # Connect signals
         self.enter_button.clicked.connect(self.enter_was_clicked)
@@ -229,7 +231,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if first_box != None:
                 cur_box = self.get_current_box()
                 pos = QCursor.pos()
-                self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()))
+                self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()), cur_box)
 
     def clamp(self, pos, smallest, greatest):
         x = max(smallest.x(), min(pos.x(), greatest.x()))
@@ -238,15 +240,40 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
 
 class PlaceHolderMechanism(QMenu):
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
         self.setTitle("Placeholders")
+        self.parent = parent
         self.addAction("Add new", self.add_new)
 
         self.placeholders = {}
+        self.cur_box = None
 
-    def show_menu(self, pos):
+    def show_menu(self, pos, cur_box):
+        self.cur_box = cur_box
         self.popup(pos)
 
     def add_new(self):
-        dlg =
+        dlg = customDialog.CustomDialog(
+            self, "Add New Placeholder", QSize(200, 100), QLineEdit(), self.on_add_ok, None
+        )
+        dlg.exec()
+
+    def on_add_ok(self, widget):
+        dlg = QColorDialog()
+        color = dlg.getColor()
+        self.placeholders[widget.text()] = [color, []]
+        self.addAction(widget.text())
+        self.add_to_existing(widget.text())
+
+    def add_to_existing(self, key):
+        cur_point = self.parent.mapToGlobal(self.cur_box.geometry().topLeft())
+        self.placeholders[key][1].append(cur_point)
+
+        self.cur_box.set_text_color(self.placeholders[key][0])
+        self.cur_box.append_text(key)
+        self.cur_box.set_text_color(QColor(0, 0, 0))
+
+    def triggered(self, action):
+        self.add_to_existing(action.text())
+
