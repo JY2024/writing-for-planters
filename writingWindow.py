@@ -1,4 +1,5 @@
-from PyQt5.QtGui import QKeySequence
+from PyQt5 import QtCore
+from PyQt5.QtGui import QKeySequence, QKeyEvent
 
 import collapsableBox
 import bulletPoint
@@ -12,13 +13,14 @@ from PyQt5.QtCore import (
     QSize, Qt
 )
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox
 )
 
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
         self.num_parts = 0
+        self.placeholders = PlaceHolderMechanism()
         # Outline and Story labels
         self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
         story_label = designFunctions.generate_label("Story", bold=True, font_size="20px")
@@ -59,6 +61,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(story_label)
         self.main_layout.addWidget(self.toggle_boxes_button)
         self.main_layout.addWidget(self.box_for_boxes)
+        self.main_layout.addWidget(self.placeholders)
 
         super().__init__(title, QSize(1000, 700), self.main_layout)
 
@@ -71,6 +74,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         # Shortcuts
         to_top_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+O")), self)
         to_top_shortcut.activated.connect(self.on_to_top)
+        placeholder_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+H")), self)
+        placeholder_shortcut.activated.connect(self.on_placeholder_requested)
 
         self.first_box_index = None
 
@@ -211,3 +216,25 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if item != None:
                 text += "\n" + item.get_written_work()
         return text
+
+    def get_current_box(self):
+        for i in range(self.boxes_layout.count()):
+            item = self.boxes_layout.itemAt(i).widget()
+            if item != None and item.text_edit.hasFocus():
+                return item
+        return None
+
+    def on_placeholder_requested(self):
+        current_box = self.get_current_box()
+        position = self.mapToGlobal(current_box.mapToGlobal(current_box.text_edit.pos()))
+        self.placeholders.show_menu(position)
+
+class PlaceHolderMechanism(QComboBox):
+    def __init__(self):
+        super().__init__()
+        self.hide()
+
+    def show_menu(self, pos):
+        print("entered show menu") # Why didn't it move to the correct spot??
+        self.move(pos)
+        self.show()

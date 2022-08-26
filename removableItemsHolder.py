@@ -1,5 +1,5 @@
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel, QFileDialog
+from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel
 
 import customDialog
 import workCreationWidget
