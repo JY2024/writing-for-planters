@@ -17,9 +17,6 @@ class BulletPoint(QHBoxLayout):
     def on_clicked(self):
         self.my_parent.bulletPoint_was_clicked(self)
 
-    def text(self):
-        return self.button.text()
-
     def remove_items(self):
         self.removeWidget(self.button)
         self.removeWidget(self.check_box)

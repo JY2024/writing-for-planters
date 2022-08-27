@@ -114,7 +114,13 @@ class CollapsableBox(QWidget):
         self.animation_group_horizontal.start()
 
     def set_text_color(self, color):
-        self.text_edit.setTextColor(color)
+        if self.text_edit.hasFocus():
+            self.text_edit.setTextColor(color)
+        else:
+            self.comment_text_edit.setTextColor(color)
 
     def append_text(self, text):
-        self.text_edit.insertPlainText(text)
+        if self.text_edit.hasFocus():
+            self.text_edit.insertPlainText(text)
+        else:
+            self.comment_text_edit.insertPlainText(text)

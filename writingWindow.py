@@ -147,7 +147,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(bullet)):
                 box = self.find_matching_box(bullet.get_text())
                 if box != None:
-                    self.main_layout.removeWidget(box)
+                    print("removed one")
+                    self.boxes_layout.removeWidget(box)
                     bullet.remove_items()
                     self.group_box_layout.removeItem(bullet)
         self.revert_remove_mode()
@@ -226,7 +227,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     def get_current_box(self):
         for i in range(self.boxes_layout.count()):
             item = self.boxes_layout.itemAt(i).widget()
-            if item != None and item.text_edit.hasFocus():
+            if item != None and (item.text_edit.hasFocus() or item.comment_text_edit.hasFocus()):
                 return item
         return None
 
@@ -244,18 +245,18 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         return QPoint(x, y)
 
     def on_placeholders_manage(self):
-        self.placeholders.set_add_new(False)
-        self.placeholders.popup(QCursor.pos())
-        # MAke sure pressing the things won't do anything
+        if self.first_box_index != None and self.boxes_layout.itemAt(self.first_box_index) != None:
+            self.placeholders.show_menu(QCursor.pos(), self.get_current_box())
+
 
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):
-        super().__init__()
+        super().__init__(parent)
         self.setTitle("Placeholders")
         self.parent = parent
         self.add_new_action = QAction("Add new")
-        self.add_new_action.triggered.connect(self.add_new)
+        self.add_new_action.triggered.connect(self.triggered)
         self.addAction(self.add_new_action)
 
         self.placeholders = {}
@@ -274,9 +275,12 @@ class PlaceHolderMechanism(QMenu):
     def on_add_ok(self, widget):
         dlg = QColorDialog()
         color = dlg.getColor()
-        self.placeholders[widget.text()] = [color, []]
-        self.addAction(widget.text())
-        self.add_to_existing(widget.text())
+
+        self.placeholders[widget.text()] = [color, []] # Add new to entries: "name" - [color, array of points]
+        self.addAction(widget.text(), self.triggered)
+
+        if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
+            self.add_to_existing(widget.text())
 
     def add_to_existing(self, key):
         cur_point = self.parent.mapToGlobal(self.cur_box.geometry().topLeft())
@@ -286,16 +290,15 @@ class PlaceHolderMechanism(QMenu):
         self.cur_box.append_text(key)
         self.cur_box.set_text_color(QColor(0, 0, 0))
 
-    def triggered(self, action):
-        print("action text is ", action.text())
-        if action.text() != "Add new":
-            if not self.add_new_action.isEnabled():
-                self.on_show_placeholders_positions(action)
-            else:
+    def triggered(self):
+        action = self.sender()
+        if action.text() == "Add new":
+            self.add_new()
+        else:
+            if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
                 self.add_to_existing(action.text())
-
-    def set_add_new(self, enabled):
-        self.add_new_action.setEnabled(enabled)
+            else:
+                self.on_show_placeholders_positions(action)
 
     def on_show_placeholders_positions(self, action):
-        self.set_add_new(True)
+        pass
