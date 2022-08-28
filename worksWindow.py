@@ -6,7 +6,8 @@ import workCreationWidget
 import workSummary
 import workPage
 import scrollableWindow
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QFileDialog
+
 
 class WorksWindow(scrollableWindow.ScrollableWindow):
     def __init__(self):
@@ -15,6 +16,8 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.layout.addWidget(self.create_button)
         self.remove_button = designFunctions.generate_button("Remove Works", checkable=True)
         self.layout.addWidget(self.remove_button)
+        self.open_button = designFunctions.generate_button("Open Work")
+        self.layout.addWidget(self.open_button)
 
         super().__init__("Works", QSize(900, 700), self.layout)
 
@@ -26,3 +29,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
 
         self.create_button.clicked.connect(self.removable_items.on_create_clicked)
         self.remove_button.clicked.connect(self.removable_items.on_remove_clicked)
+        self.open_button.clicked.connect(self.open_work)
+
+    def open_work(self):
+        file = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
