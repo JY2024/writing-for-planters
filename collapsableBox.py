@@ -124,3 +124,6 @@ class CollapsableBox(QWidget):
             self.text_edit.insertPlainText(text)
         else:
             self.comment_text_edit.insertPlainText(text)
+
+    def has_placeholder(self, action):
+        return action in self.get_written_work()

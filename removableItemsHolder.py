@@ -20,7 +20,7 @@ class RemovableItemsHolder(QGroupBox):
     def on_create_clicked(self):
         helper_widget = self.part_creation_widget if isinstance(self.part_creation_widget, QLabel) else self.part_creation_widget()
         dlg = customDialog.CustomDialog(
-            self, "Create", QSize(500, 500), helper_widget, self.on_create_ok, self.toggle_all_checkboxes
+            self, "Create", QSize(500, 500), helper_widget, self.on_create_ok, None
         )
         dlg.exec()
 

@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor
+from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor, QTextDocument
 
 import collapsableBox
 import bulletPoint
@@ -14,7 +14,7 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication,
-    QColorDialog, QAction
+    QColorDialog, QAction, QScrollArea
 )
 
 # Writing window
@@ -240,9 +240,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()), cur_box)
 
     def clamp(self, pos, smallest, greatest):
-        x = max(smallest.x(), min(pos.x(), greatest.x()))
-        y = max(smallest.y(), min(pos.y(), greatest.y()))
-        return QPoint(x, y)
+        return QPoint(self.clamp_int(pos.x(), smallest.x(), greatest.x()), self.clamp_int(pos.y(), smallest.y(), greatest.y()))
+
+    def clamp_int(self, n, smallest, greatest):
+        return max(smallest, min(n, greatest))
 
     def on_placeholders_manage(self):
         if self.first_box_index != None and self.boxes_layout.itemAt(self.first_box_index) != None:
@@ -276,17 +277,14 @@ class PlaceHolderMechanism(QMenu):
         dlg = QColorDialog()
         color = dlg.getColor()
 
-        self.placeholders[widget.text()] = [color, []] # Add new to entries: "name" - [color, array of points]
+        self.placeholders[widget.text()] = color # Add new to entries: "name" - [color, array of points]
         self.addAction(widget.text(), self.triggered)
 
         if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
             self.add_to_existing(widget.text())
 
     def add_to_existing(self, key):
-        cur_point = self.parent.mapToGlobal(self.cur_box.geometry().topLeft())
-        self.placeholders[key][1].append(cur_point)
-
-        self.cur_box.set_text_color(self.placeholders[key][0])
+        self.cur_box.set_text_color(self.placeholders[key])
         self.cur_box.append_text(key)
         self.cur_box.set_text_color(QColor(0, 0, 0))
 
@@ -301,4 +299,57 @@ class PlaceHolderMechanism(QMenu):
                 self.on_show_placeholders_positions(action)
 
     def on_show_placeholders_positions(self, action):
-        pass
+        dlg = customDialog.CustomDialog(
+            self.parent, action.text() + " Placeholders Summary", QSize(800, 500),
+            PlaceholderSummaryDisplay(self.parent, action.text()), None, None
+        )
+        dlg.exec()
+
+class PlaceholderSummaryDisplay(QWidget):
+    def __init__(self, parent, action_name):
+        super().__init__()
+        self.parent = parent
+        self.action_name = action_name
+
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.scroll = QScrollArea()
+        self.scroll.setWidget(self)
+        self.scroll.setWidgetResizable(True)
+
+        self.set_up()
+
+    def set_up(self):
+        for i in range(self.parent.boxes_layout.count()):
+            item = self.parent.boxes_layout.itemAt(i).widget()
+            if isinstance(item, collapsableBox.CollapsableBox) and item.has_placeholder(self.action_name):
+                self.layout.addWidget(QLabel(item.text()))
+                label = designFunctions.generate_textEdit(doc=QTextDocument(self.extract_text_excerpts(item.get_written_work())),
+                                                          background_color="white", size=QSize(600, 400), read_only=True)
+                self.layout.addWidget(label)
+
+    def extract_text_excerpts(self, text):
+        text = " ".join(text.split())
+        excerpt_text = ""
+        substring = text[0:]
+        prev_accumulated = 0
+        while len(substring) > 0 and (self.action_name in substring):
+            index = substring.index(self.action_name) + prev_accumulated
+            start = self.parent.clamp_int(index - 30, 0, len(text))
+            end = self.parent.clamp_int(index + len(self.action_name) + 30, 0, len(text))
+
+            str = text[start:end]
+            str = str.replace(self.action_name, self.action_name.upper())
+            start_str = "\"" if start == 0 else "\"..."
+            end_str = "\"\n\n" if end == len(text) else "...\"\n\n"
+            excerpt_text += start_str + str + end_str
+
+            substring = substring[substring.index(self.action_name) + len(self.action_name):]
+            prev_accumulated = (index + len(self.action_name))
+        return excerpt_text
+
+
+
+
+

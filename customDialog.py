@@ -22,10 +22,11 @@ class CustomDialog(QDialog):
 
     def on_ok(self):
         self.accept()
-        if not isinstance(self.main_widget, QLabel):
-            self.ok_method(self.main_widget)
-        else:
-            self.ok_method()
+        if self.ok_method != None:
+            if not isinstance(self.main_widget, QLabel):
+                self.ok_method(self.main_widget)
+            else:
+                self.ok_method()
 
     def on_reject(self):
         self.reject()
