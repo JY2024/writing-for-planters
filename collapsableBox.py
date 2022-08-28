@@ -1,11 +1,11 @@
 import designFunctions
 from PyQt5.QtCore import QPropertyAnimation, QParallelAnimationGroup, QAbstractAnimation, QSize
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QTextEdit, QWidget, QSizePolicy, QHBoxLayout
+    QVBoxLayout, QTextEdit, QWidget, QSizePolicy, QHBoxLayout, QStyle
 )
 
 class CollapsableBox(QWidget):
-    def __init__(self, text, bottom_layout, icon, item):
+    def __init__(self, text, icon, item):
         # Set up
         super().__init__()
 
@@ -14,6 +14,8 @@ class CollapsableBox(QWidget):
 
         self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
         self.comment_button = designFunctions.generate_button(text="", checkable=True, size=QSize(40, 40))
+        pixmapi = getattr(QStyle, "SP_FileDialogDetailedView")
+        icon = self.style().standardIcon(pixmapi)
         self.comment_button.setIcon(icon)
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.button)
@@ -31,7 +33,7 @@ class CollapsableBox(QWidget):
         self.bottom_layout.addWidget(self.comment_text_edit)
 
         self.layout.addLayout(self.top_layout)
-        self.layout.addLayout(bottom_layout)
+        self.layout.addLayout(self.bottom_layout)
 
         # Animations
         content_height = self.item.sizeHint().height()

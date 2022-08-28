@@ -1,8 +1,6 @@
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QTextEdit, QSizePolicy, QVBoxLayout, QStyle, QHBoxLayout
+from PyQt5.QtWidgets import QTextEdit, QSizePolicy
 
 import collapsableBox
-import designFunctions
 
 
 class BoxForStory(collapsableBox.CollapsableBox):
@@ -16,10 +14,7 @@ class BoxForStory(collapsableBox.CollapsableBox):
         self.text_edit.setMaximumWidth(940)
         self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        pixmapi = getattr(QStyle, "SP_FileDialogDetailedView")
-        icon = self.style().standardIcon(pixmapi)
-
-        super().__init__(text, self.bottom_layout, icon, self.text_edit)
+        super().__init__(text, self.text_edit)
 
     def get_id(self):
         return self.id
