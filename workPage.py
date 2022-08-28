@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QM
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
+import boxForInfo
 import collapsableBox
 import partCreationWidget
 import removableItemsHolder
@@ -37,7 +38,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
                                                        background_color="white", read_only=True)
         self.description_label = designFunctions.generate_textEdit(description, font_size="14px", border=True,
                                                                size=QSize(800, 200), background_color="white", read_only=True)
-        self.inspiration_box = collapsableBox.CollapsableBox("Inspiration", 0)
+        self.inspiration_box = boxForInfo.BoxForInfo()
         self.add_part_button = QPushButton("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 

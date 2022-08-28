@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 )
 
 class CollapsableBox(QWidget):
-    def __init__(self, text, icon, item):
+    def __init__(self, text, item):
         # Set up
         super().__init__()
 
