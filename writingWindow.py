@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (
     QColorDialog, QAction, QScrollArea
 )
 
+
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
     def __init__(self, title):
@@ -82,6 +83,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         to_top_shortcut.activated.connect(self.on_to_top)
         placeholder_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+H")), self)
         placeholder_shortcut.activated.connect(self.on_placeholder_requested)
+        italics_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+I")), self)
+        italics_shortcut.activated.connect(self.on_italics)
 
         self.first_box_index = None
 
@@ -90,7 +93,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         text = self.line_edit.text()
         if self.is_duplicate_bullet(text):
             dlg = customDialog.CustomDialog(
-                self, "Duplicate Bulletpoint", QSize(300, 100), QLabel("You already have a bulletpoint with this name.\nDo you want to reorder instead?"), self.on_enter_edit_ok, self.on_edit_reject
+                self, "Duplicate Bulletpoint", QSize(300, 100),
+                QLabel("You already have a bulletpoint with this name.\nDo you want to reorder instead?"),
+                self.on_enter_edit_ok, self.on_edit_reject
             )
             dlg.exec()
         else:
@@ -112,7 +117,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         else:
             if self.at_least_one_checked():
                 dlg = customDialog.CustomDialog(
-                    self, "Deletion", QSize(300, 100), QLabel("Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE"), self.on_delete_ok, self.revert_remove_mode
+                    self, "Deletion", QSize(300, 100),
+                    QLabel("Are you sure you want to delete this?\nTHIS IS NOT REVERSIBLE"), self.on_delete_ok,
+                    self.revert_remove_mode
                 )
                 dlg.exec()
             else:
@@ -237,10 +244,12 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if first_box != None:
                 cur_box = self.get_current_box()
                 pos = QCursor.pos()
-                self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()), cur_box)
+                self.placeholders.show_menu(self.clamp(pos, self.geometry().topLeft(), self.geometry().bottomRight()),
+                                            cur_box)
 
     def clamp(self, pos, smallest, greatest):
-        return QPoint(self.clamp_int(pos.x(), smallest.x(), greatest.x()), self.clamp_int(pos.y(), smallest.y(), greatest.y()))
+        return QPoint(self.clamp_int(pos.x(), smallest.x(), greatest.x()),
+                      self.clamp_int(pos.y(), smallest.y(), greatest.y()))
 
     def clamp_int(self, n, smallest, greatest):
         return max(smallest, min(n, greatest))
@@ -249,6 +258,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         if self.first_box_index != None and self.boxes_layout.itemAt(self.first_box_index) != None:
             self.placeholders.show_menu(QCursor.pos(), self.get_current_box())
 
+    def on_italics(self):
+        self.get_current_box().toggle_italics()
 
 
 class PlaceHolderMechanism(QMenu):
@@ -279,7 +290,7 @@ class PlaceHolderMechanism(QMenu):
         dlg = QColorDialog()
         color = dlg.getColor()
 
-        self.placeholders[widget.text()] = color # Add new to entries: "name" - [color, array of points]
+        self.placeholders[widget.text()] = color  # Add new to entries: "name" - [color, array of points]
         self.addAction(widget.text(), self.triggered)
 
         if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
@@ -295,7 +306,8 @@ class PlaceHolderMechanism(QMenu):
         if action.text() == "Add new":
             self.add_new()
         else:
-            if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
+            if self.cur_box != None and (
+                    self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
                 self.add_to_existing(action.text())
             else:
                 self.on_show_placeholders_positions(action)
@@ -303,6 +315,7 @@ class PlaceHolderMechanism(QMenu):
     def on_show_placeholders_positions(self, action):
         self.window = PlaceholderSummaryDisplay(self.parent, action.text())
         self.window.show()
+
 
 class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):
     def __init__(self, parent, action_name):
@@ -319,8 +332,9 @@ class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):
             item = self.parent.boxes_layout.itemAt(i).widget()
             if isinstance(item, collapsableBox.CollapsableBox) and item.has_placeholder(self.action_name):
                 self.layout.addWidget(QLabel(item.text()))
-                label = designFunctions.generate_textEdit(doc=QTextDocument(self.extract_text_excerpts(item.get_written_work())),
-                                                          background_color="white", size=QSize(600, 400), read_only=True)
+                label = designFunctions.generate_textEdit(
+                    doc=QTextDocument(self.extract_text_excerpts(item.get_written_work())),
+                    background_color="white", size=QSize(600, 400), read_only=True)
                 self.layout.addWidget(label)
 
     def extract_text_excerpts(self, text):
@@ -342,8 +356,3 @@ class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):
             substring = substring[substring.index(self.action_name) + len(self.action_name):]
             prev_accumulated = (index + len(self.action_name))
         return excerpt_text
-
-
-
-
-

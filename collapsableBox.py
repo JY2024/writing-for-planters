@@ -127,3 +127,9 @@ class CollapsableBox(QWidget):
 
     def has_placeholder(self, action):
         return action in self.get_written_work()
+
+    def toggle_italics(self):
+        self.text_edit.setFontItalic(not self.text_edit.fontItalic())
+
+    def toggle_italics(self):
+        self.text_edit.setFontItalic(not self.text_edit.fontItalic())
