@@ -1,6 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor, QTextDocument
 
+import boxForStory
 import collapsableBox
 import bulletPoint
 import customDialog
@@ -100,7 +101,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             dlg.exec()
         else:
             self.num_parts += 1
-            box = collapsableBox.CollapsableBox(text, self.num_parts)
+            box = boxForStory.BoxForStory(text, self.num_parts)
             self.boxes_layout.addWidget(box)
             bullet = bulletPoint.BulletPoint(text, self, box, self.num_parts)
             self.group_box_layout.addLayout(bullet)

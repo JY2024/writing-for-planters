@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QM
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
+import boxForInfo
 import partCreationWidget
 import removableItemsHolder
 import writingWindow
