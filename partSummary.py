@@ -36,3 +36,6 @@ class PartSummary(QWidget):
 
     def on_title_clicked(self):
         self.my_parent.open_part(self.title)
+
+    def get_synopsis(self):
+        return self.synopsis_label.toPlainText()

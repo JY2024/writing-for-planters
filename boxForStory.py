@@ -43,3 +43,6 @@ class BoxForStory(collapsableBox.CollapsableBox):
 
     def toggle_italics(self):
         self.text_edit.setFontItalic(not self.text_edit.fontItalic())
+
+    def to_html(self):
+        return self.text_edit.toHtml()

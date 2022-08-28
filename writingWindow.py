@@ -262,6 +262,15 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     def on_italics(self):
         self.get_current_box().toggle_italics()
 
+    def get_all_boxes(self):
+        boxes = []
+        for i in range(self.boxes_layout.count()):
+            item = self.boxes_layout.itemAt(i).widget()
+            if isinstance(item, collapsableBox.CollapsableBox):
+                boxes.append(item)
+        return boxes
+
+
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):

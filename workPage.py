@@ -120,3 +120,6 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         file = self.drive.CreateFile({'title': self.title_label.text() + '.txt'})
         file.SetContentString(self.get_all_text(self.removable_items.get_parts()))
         file.Upload()
+
+    def get_parts(self):
+        return self.removable_items.get_parts()

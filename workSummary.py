@@ -46,3 +46,9 @@ class WorkSummary(QWidget):
     def on_text_changed(self):
         self.matching_part.set_tags(self.tag_label.toPlainText())
         self.matching_part.set_description(self.description_label.toPlainText())
+
+    def get_description(self):
+        return self.description_label.toPlainText()
+
+    def get_tags(self):
+        return self.tag_label.toPlainText()
