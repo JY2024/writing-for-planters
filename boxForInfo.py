@@ -1,6 +1,6 @@
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QGroupBox, QGridLayout, QVBoxLayout, QLabel, QFileDialog
+from PyQt5.QtCore import QSize, QUrl
+from PyQt5.QtGui import QPixmap, QDesktopServices
+from PyQt5.QtWidgets import QGroupBox, QGridLayout, QVBoxLayout, QLabel, QFileDialog, QLineEdit, QPushButton
 
 import collapsableBox
 import customDialog
@@ -28,6 +28,18 @@ class BoxForInfo(collapsableBox.CollapsableBox):
 
     def add_media(self, media):
         pass
+
+    def add_audio(self, line_edit):
+        button = QPushButton(line_edit.text())
+        self.media_layout.addWidget(button)
+        button.clicked.connect(self.open_link)
+
+    def add_text(self, widget):
+        pass
+
+    def open_link(self, link):
+        QDesktopServices.openUrl(QUrl(link))
+
 
 class MediaSelectionPopup(scrollableWindow.ScrollableWindow):
     def __init__(self, parent):
@@ -64,7 +76,7 @@ class MediaSelectionPopup(scrollableWindow.ScrollableWindow):
 
     def on_audio(self):
         dlg = customDialog.CustomDialog(
-
+            self.parent, "Add Audio Link", QSize(300, 200), QLineEdit(), self.parent.add_audio, None
         )
         dlg.exec()
 

@@ -6,7 +6,6 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
 import boxForInfo
-import collapsableBox
 import partCreationWidget
 import removableItemsHolder
 import writingWindow
@@ -38,7 +37,6 @@ class WorkPage(scrollableWindow.ScrollableWindow):
                                                        background_color="white", read_only=True)
         self.description_label = designFunctions.generate_textEdit(description, font_size="14px", border=True,
                                                                size=QSize(800, 200), background_color="white", read_only=True)
-        self.inspiration_box = boxForInfo.BoxForInfo()
         self.add_part_button = QPushButton("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 
@@ -55,7 +53,6 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(self.title_label)
         self.main_layout.addWidget(self.tag_label)
         self.main_layout.addWidget(self.description_label)
-        self.main_layout.addWidget(self.inspiration_box)
         self.main_layout.addWidget(self.add_part_button)
         self.main_layout.addWidget(self.remove_button)
         self.main_layout.addWidget(self.removable_items)
