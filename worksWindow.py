@@ -6,7 +6,7 @@ import workCreationWidget
 import workSummary
 import workPage
 import scrollableWindow
-from PyQt5.QtWidgets import QVBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox
 
 
 class WorksWindow(scrollableWindow.ScrollableWindow):
@@ -33,3 +33,10 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
 
     def open_work(self):
         file = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
+
+    def closeEvent(self, event):
+        message = QMessageBox.question(self, "Message", "Are you sure you want to quit?", QMessageBox.Yes, QMessageBox.No)
+        if message == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
