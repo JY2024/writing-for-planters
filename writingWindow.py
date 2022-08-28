@@ -263,6 +263,8 @@ class PlaceHolderMechanism(QMenu):
         self.placeholders = {}
         self.cur_box = None
 
+        self.window = None
+
     def show_menu(self, pos, cur_box):
         self.cur_box = cur_box
         self.popup(pos)
@@ -299,26 +301,18 @@ class PlaceHolderMechanism(QMenu):
                 self.on_show_placeholders_positions(action)
 
     def on_show_placeholders_positions(self, action):
-        dlg = customDialog.CustomDialog(
-            self.parent, action.text() + " Placeholders Summary", QSize(800, 500),
-            PlaceholderSummaryDisplay(self.parent, action.text()), None, None
-        )
-        dlg.exec()
+        self.window = PlaceholderSummaryDisplay(self.parent, action.text())
+        self.window.show()
 
-class PlaceholderSummaryDisplay(QWidget):
+class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):
     def __init__(self, parent, action_name):
-        super().__init__()
         self.parent = parent
         self.action_name = action_name
 
         self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-
-        self.scroll = QScrollArea()
-        self.scroll.setWidget(self)
-        self.scroll.setWidgetResizable(True)
-
         self.set_up()
+
+        super().__init__(action_name + " Placeholders Summary", QSize(800, 500), self.layout)
 
     def set_up(self):
         for i in range(self.parent.boxes_layout.count()):
