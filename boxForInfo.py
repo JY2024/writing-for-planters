@@ -1,10 +1,11 @@
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QGroupBox, QGridLayout, QMainWindow, QVBoxLayout
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QGroupBox, QGridLayout, QVBoxLayout, QLabel, QFileDialog
 
 import collapsableBox
+import customDialog
 import designFunctions
 import scrollableWindow
-
 
 class BoxForInfo(collapsableBox.CollapsableBox):
     def __init__(self):
@@ -17,7 +18,7 @@ class BoxForInfo(collapsableBox.CollapsableBox):
         super().__init__("Inspiration", self.media_box)
 
         self.media = {}
-        self.popup = MediaSelectionPopup()
+        self.popup = MediaSelectionPopup(self)
         self.popup.hide()
 
         self.add_button.clicked.connect(self.on_add)
@@ -25,8 +26,12 @@ class BoxForInfo(collapsableBox.CollapsableBox):
     def on_add(self):
         self.popup.show()
 
+    def add_media(self, media):
+        pass
+
 class MediaSelectionPopup(scrollableWindow.ScrollableWindow):
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.main_layout = QVBoxLayout()
         self.image_button = designFunctions.generate_button("Image")
         self.audio_button = designFunctions.generate_button("Audio")
@@ -42,11 +47,26 @@ class MediaSelectionPopup(scrollableWindow.ScrollableWindow):
         self.audio_button.clicked.connect(self.on_audio)
         self.text_button.clicked.connect(self.on_text)
 
+    def select_file(self, filter):
+        dlg = QFileDialog()
+        dlg.setFileMode(QFileDialog.AnyFile)
+        dlg.setFilter(filter)
+        file_name = dlg.getOpenFileName()
+        return file_name
+
     def on_image(self):
-        pass
+        label = QLabel()
+        file_name = self.select_file("Image files (*.jpg *.png *.jpeg)")
+        pixmap = QPixmap(file_name)
+        label.setPixmap(pixmap)
+        label.resize(pixmap.width(), pixmap.height())
+        self.parent.add_media(label)
 
     def on_audio(self):
-        pass
+        dlg = customDialog.CustomDialog(
+
+        )
+        dlg.exec()
 
     def on_text(self):
         pass
