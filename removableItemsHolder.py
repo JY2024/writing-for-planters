@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel, QFileDialog
@@ -89,7 +90,7 @@ class RemovableItemsHolder(QGroupBox):
             if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(summary)):
                 path = self.parts[title][1].get_path()
                 if os.path.exists(path):
-                    os.remove(path)
+                    shutil.rmtree(path)
                 self.main_layout.removeWidget(summary)
                 self.parts.pop(title)
         self.toggle_all_checkboxes()

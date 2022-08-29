@@ -53,7 +53,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
                 if os.path.exists(os.path.join(dir, "part" + str(part_index) + ".dir")):
                     part_path = os.path.join(dir, "part" + str(part_index) + ".dir")
                     part_info = self.parse_part(os.path.join(part_path, "header.txt"))
-                    writing_window = writingWindow.WritingWindow(part_info[0], part_info[1])
+                    writing_window = writingWindow.WritingWindow(part_info[0], part_path)
                     part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1], part_index)
                     work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
                     work_page.removable_items.add_widget(part_summary)
