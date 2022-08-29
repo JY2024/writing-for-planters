@@ -46,6 +46,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         outline_layout.addWidget(self.group_box)
 
         # Buttons
+        self.local_save_button = designFunctions.generate_button("Local &Save")
         self.enter_button = designFunctions.generate_button("&Enter", checkable=False)
         self.remove_button = designFunctions.generate_button("Remove", checkable=True)
         self.toggle_boxes_button = designFunctions.generate_button("Expand All", checkable=True)
@@ -59,6 +60,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
         # Main Layout
         self.main_layout = QVBoxLayout()
+        self.main_layout.addWidget(self.local_save_button)
         self.main_layout.addWidget(self.outline_label)
         self.main_layout.addLayout(outline_layout)
         self.main_layout.addWidget(self.enter_button)
@@ -81,6 +83,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.toggle_boxes_button.clicked.connect(self.toggle_boxes_clicked)
         self.edit_button.clicked.connect(self.on_enter_edit_ok)
         self.placeholders_button.clicked.connect(self.on_placeholders_manage)
+        self.local_save_button.clicked.connect(self.on_local_save)
 
         # Shortcuts
         to_top_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+O")), self)
@@ -89,6 +92,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         placeholder_shortcut.activated.connect(self.on_placeholder_requested)
         italics_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+I")), self)
         italics_shortcut.activated.connect(self.on_italics)
+        save_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+S")), self)
+        save_shortcut.activated.connect(self.on_local_save)
 
         self.first_box_index = None
 
@@ -112,7 +117,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 self.first_box_index = self.boxes_layout.indexOf(box)
             self.line_edit.setText("")
 
-            box_file = open(os.path.join(self.path, "box" + str(self.num_parts) + ".txt"), "w+")
+            box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
             box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
@@ -164,8 +169,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 box = self.find_matching_box(bullet.get_text())
                 if box != None:
                     # Remove from directory
-                    if os.path.exists(os.path.join(self.path, "box" + str(box.get_id()) + ".txt")):
-                        os.remove(os.path.join(self.path, "box" + str(box.get_id()) + ".txt"))
+                    if os.path.exists(os.path.join(self.path, "box" + box.text() + ".txt")):
+                        os.remove(os.path.join(self.path, "box" + box.text() + ".txt"))
                     self.boxes_layout.removeWidget(box)
                     bullet.remove_items()
                     self.group_box_layout.removeItem(bullet)
@@ -232,7 +237,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 box.set_writing(temp_text)
 
     def on_to_top(self):
-        self.scroll.ensureWidgetVisible(self.outline_label)
+        self.scroll.ensureWidgetVisible(self.local_save_button)
 
     def get_all_text(self):
         text = ""
@@ -293,6 +298,14 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         if self.first_box_index == None:
             self.first_box_index = self.boxes_layout.indexOf(box)
         self.line_edit.setText("")
+
+    def on_local_save(self):
+        boxes = self.get_all_boxes()
+        for box in boxes:
+            box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
+            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
+            box_file.write(box_str)
+            box_file.close()
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):

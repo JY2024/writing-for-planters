@@ -49,10 +49,10 @@ class RemovableItemsHolder(QGroupBox):
                     work_summary_file.close()
             else:
                 # New directory
-                dir_path = os.path.join(self.path, "part" + str(len(self.parts) + 1) + ".dir")
+                dir_path = os.path.join(self.path, "part" + widget.get_title() + ".dir")
                 os.mkdir(dir_path)
                 # For creating a part summary in a work page
-                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
+                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description())
                 my_part = self.part(widget.get_title(), dir_path)
                 # Save part title and synopsis
                 part_header_file = open(os.path.join(dir_path, "header.txt"), "w+")

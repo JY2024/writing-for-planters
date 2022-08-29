@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QCheckBox, QVBoxLayout
 
 
 class PartSummary(QWidget):
-    def __init__(self, parent, title, synopsis, part_num):
+    def __init__(self, parent, title, synopsis):
         super().__init__()
         self.my_parent = parent
         self.title = title
@@ -15,7 +15,7 @@ class PartSummary(QWidget):
 
         self.top_layout = QHBoxLayout()
         self.title_button = designFunctions.generate_button(
-            "Part " + str(part_num) + ": " + title, bold=True, border=True, size=QSize(400, 50),
+            title, bold=True, border=True, size=QSize(400, 50),
             background_color="white"
         )
         self.top_layout.addWidget(self.title_button)

@@ -49,20 +49,20 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
             self.removable_items.add_widget(work_summary)
 
             # For each part:
-            for part_index in range(50):
-                if os.path.exists(os.path.join(dir, "part" + str(part_index) + ".dir")):
-                    part_path = os.path.join(dir, "part" + str(part_index) + ".dir")
+            for file_name in os.listdir(dir):
+                part_path = os.path.join(dir, file_name)
+                if os.path.isdir(part_path):
                     part_info = self.parse_part(os.path.join(part_path, "header.txt"))
                     writing_window = writingWindow.WritingWindow(part_info[0], part_path)
-                    part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1], part_index)
+                    part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1])
                     work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
                     work_page.removable_items.add_widget(part_summary)
 
                     # For each box
-                    for box_index in range(50):
-                        if os.path.exists(os.path.join(part_path, "box" + str(box_index) + ".txt")):
-                            box_path = os.path.join(part_path, "box" + str(box_index) + ".txt")
-                            box_info = self.parse_box_info(box_path)
+                    for box_file_name in os.listdir(part_path):
+                        box_file_path = os.path.join(part_path, box_file_name)
+                        if os.path.isfile(box_file_path) and "header" not in box_file_path:
+                            box_info = self.parse_box_info(box_file_path)
                             writing_window.add_box(box_info[0], box_info[1], box_info[2])
 
     def parse_summary(self, summary_path):

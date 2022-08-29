@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
@@ -28,9 +30,12 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.gauth = GoogleAuth()
         self.authorized = False
         self.drive = None
+        self.path = path
+        self.title = title
 
         self.export_button = designFunctions.generate_button("Export")
         self.preview_button = designFunctions.generate_button("Preview")
+        self.local_save_button = designFunctions.generate_button("Local Save")
         self.title_label = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
 
         self.tag_label = designFunctions.generate_textEdit(tags, font_size="14px", border=True, size=QSize(800, 200),
@@ -49,6 +54,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.preview_button)
         self.top_layout.addWidget(self.export_button)
+        self.top_layout.addWidget(self.local_save_button)
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addWidget(self.title_label)
         self.main_layout.addWidget(self.tag_label)
@@ -71,6 +77,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.export_button.clicked.connect(self.on_export)
         self.preview_button.clicked.connect(self.on_preview)
         self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
+        self.local_save_button.clicked.connect(self.on_local_save)
 
     def set_tags(self, text):
         self.tag_label.setDocument(QTextDocument(text))
@@ -123,3 +130,20 @@ class WorkPage(scrollableWindow.ScrollableWindow):
 
     def get_parts(self):
         return self.removable_items.get_parts()
+
+    def on_local_save(self):
+        # Save title, description, and tags
+        work_summary_file = open(os.path.join(self.path, "summary.txt"), "w+")
+        summary_string = "_TITLE_" + self.title + "_TITLE_TAGS_" + self.tag_label.toPlainText() \
+                         + "_TAGS_DESCRIPTION_" + self.description_label.toPlainText() + "_DESCRIPTION_"
+        work_summary_file.write(summary_string)
+        work_summary_file.close()
+
+        # Save the part synopsis and titles
+        parts = self.removable_items.get_parts()
+        for part_name in parts.keys():
+            part_path = parts[part_name][1].get_path()
+            part_header_file = open(os.path.join(part_path, "header.txt"), "w+")
+            part_header_string = "_TITLE_" + part_name + "_TITLE_SYNOPSIS_" + parts[part_name][0].get_synopsis() + "_SYNOPSIS_"
+            part_header_file.write(part_header_string)
+            part_header_file.close()
