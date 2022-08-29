@@ -1,13 +1,17 @@
+import os
+
 from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel, QFileDialog
 
 import customDialog
+import partCreationWidget
 import workCreationWidget
 import checkboxFunctions
 
 class RemovableItemsHolder(QGroupBox):
-    def __init__(self, create_button, remove_button, part_creation_widget, part_summary, part):
+    def __init__(self, create_button, remove_button, part_creation_widget, part_summary, part, path):
         super().__init__()
+        self.path = path
         self.part_creation_widget = part_creation_widget
         self.part_summary = part_summary
         self.part = part
@@ -27,15 +31,34 @@ class RemovableItemsHolder(QGroupBox):
     def on_create_ok(self, widget):
         my_part_summary = None
         my_part = None
+        cur_path = None
         if len(self.parts.keys()) == 0 or widget.get_title() not in self.parts:
             if isinstance(widget, workCreationWidget.WorkCreationWidget):
                 # For creating a work summary in works window
-                my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description())
-                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
+                cur_path = QFileDialog.getExistingDirectory(parent=self, caption="Select Directory",
+                                                            options=QFileDialog.ShowDirsOnly)  # Path to new folder
+                if cur_path != "":
+                    my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description(), cur_path)
+                    my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
+
+                    # Save title, description, and tags
+                    work_summary_file = open(os.path.join(cur_path, "summary.txt"), "w+")
+                    summary_string = "_TITLE_" + widget.get_title() + "_TITLE_TAGS_" + widget.get_tags().toPlainText() \
+                                 + "_TAGS_DESCRIPTION_" + widget.get_description().toPlainText() + "_DESCRIPTION_"
+                    work_summary_file.write(summary_string)
+                    work_summary_file.close()
             else:
+                # New directory
+                dir_path = os.path.join(self.path, "part" + str(len(self.parts) + 1) + ".dir")
+                os.mkdir(dir_path)
                 # For creating a part summary in a work page
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description(), len(self.parts) + 1)
-                my_part = self.part(widget.get_title())
+                my_part = self.part(widget.get_title(), dir_path)
+                # Save part title and synopsis
+                part_header_file = open(os.path.join(dir_path, "header.txt"), "w+")
+                part_header_string = "_TITLE_" + widget.get_title() + "_TITLE_SYNOPSIS_" + widget.get_description().toPlainText() + "_SYNOPSIS_"
+                part_header_file.write(part_header_string)
+                part_header_file.close()
             self.main_layout.addWidget(my_part_summary)
             self.parts[widget.get_title()] = [my_part_summary, my_part]
 
@@ -65,6 +88,9 @@ class RemovableItemsHolder(QGroupBox):
         for title in list(self.parts):
             summary = self.parts[title][0]
             if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(summary)):
+                path = self.parts[title][1].get_path()
+                if os.path.exists(path):
+                    os.remove(path)
                 self.main_layout.removeWidget(summary)
                 self.parts.pop(title)
         self.toggle_all_checkboxes()

@@ -24,7 +24,7 @@ class Popup(scrollableWindow.ScrollableWindow):
         super().__init__("Preview", QSize(1000, 700), self.layout)
 
 class WorkPage(scrollableWindow.ScrollableWindow):
-    def __init__(self, title, tags, description):
+    def __init__(self, title, tags, description, path):
         self.gauth = GoogleAuth()
         self.authorized = False
         self.drive = None
@@ -43,7 +43,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.removable_items = removableItemsHolder.RemovableItemsHolder(self.add_part_button, self.remove_button,
                                                                          partCreationWidget.PartCreationWidget,
                                                                          partSummary.PartSummary,
-                                                                         writingWindow.WritingWindow)
+                                                                         writingWindow.WritingWindow, path)
 
         self.main_layout = QVBoxLayout()
         self.top_layout = QHBoxLayout()

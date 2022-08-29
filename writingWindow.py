@@ -1,3 +1,5 @@
+import os
+
 from PyQt5 import QtCore
 from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor, QTextDocument
 
@@ -14,14 +16,15 @@ from PyQt5.QtCore import (
     QSize, Qt, QPoint
 )
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QWidget, QComboBox, QMenu, QApplication,
-    QColorDialog, QAction, QScrollArea
+    QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QMenu,
+    QColorDialog, QAction
 )
 
 
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
-    def __init__(self, title):
+    def __init__(self, title, path):
+        self.path = path
         self.num_parts = 0
         # Outline and Story labels
         self.outline_label = designFunctions.generate_label("Outline", bold=True, font_size="20px")
@@ -109,6 +112,11 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 self.first_box_index = self.boxes_layout.indexOf(box)
             self.line_edit.setText("")
 
+            box_file = open(os.path.join(self.path, "box" + str(self.num_parts) + ".txt"), "w+")
+            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_"
+            box_file.write(box_str)
+            box_file.close()
+
     # when button is clicked, show the checkboxes next to the bullet points
     def remove_was_clicked(self):
         if self.remove_button.isChecked():
@@ -155,7 +163,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if checkboxFunctions.is_checked(checkboxFunctions.get_checkbox(bullet)):
                 box = self.find_matching_box(bullet.get_text())
                 if box != None:
-                    print("removed one")
+                    # Remove from directory
+                    if os.path.exists(os.path.join(self.path, "box" + str(box.get_id()) + ".txt")):
+                        os.remove(os.path.join(self.path, "box" + str(box.get_id()) + ".txt"))
                     self.boxes_layout.removeWidget(box)
                     bullet.remove_items()
                     self.group_box_layout.removeItem(bullet)
@@ -269,6 +279,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             if isinstance(item, collapsableBox.CollapsableBox):
                 boxes.append(item)
         return boxes
+
+    def get_path(self):
+        return self.path
 
 
 
