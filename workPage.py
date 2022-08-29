@@ -73,10 +73,10 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
 
     def set_tags(self, text):
-        self.tag_label.setText(text)
+        self.tag_label.setDocument(QTextDocument(text))
 
     def set_description(self, text):
-        self.description_label.setText(text)
+        self.description_label.setDocument(QTextDocument(text))
 
     def on_export(self):
         self.mode_msg.show()

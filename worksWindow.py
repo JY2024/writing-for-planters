@@ -2,14 +2,18 @@ import os
 import pathlib
 
 from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QTextDocument
 
 import designFunctions
+import partSummary
 import removableItemsHolder
 import workCreationWidget
 import workSummary
 import workPage
 import scrollableWindow
 from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox
+
+import writingWindow
 
 
 class WorksWindow(scrollableWindow.ScrollableWindow):
@@ -32,5 +36,46 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.open_button.clicked.connect(self.open_work)
 
     def open_work(self):
-        file = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
-        # load state
+        dir = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
+        if dir != "":
+            self.load_state(dir)
+
+    def load_state(self, dir):
+        if os.path.exists(os.path.join(dir, "summary.txt")):
+            work_info = self.parse_summary(os.path.join(dir, "summary.txt"))
+            work_page = workPage.WorkPage(work_info[0], work_info[1], work_info[2], dir)
+            work_summary = workSummary.WorkSummary(self.removable_items, work_info[0], work_info[1], work_info[2], work_page)
+            self.removable_items.add_part(work_info[0], work_summary, work_page)
+            self.removable_items.add_widget(work_summary)
+
+            # For each part:
+            for part_index in range(50):
+                if os.path.exists(os.path.join(dir, "part" + str(part_index) + ".dir")):
+                    part_path = os.path.join(dir, "part" + str(part_index) + ".dir")
+                    part_info = self.parse_part(os.path.join(part_path, "header.txt"))
+                    writing_window = writingWindow.WritingWindow(part_info[0], part_info[1])
+                    part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1], part_index)
+                    work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
+                    work_page.removable_items.add_widget(part_summary)
+
+                    # For each box
+                    for box_index in range(50):
+                        if os.path.exists(os.path.join(part_path, "box" + str(box_index) + ".txt")):
+                            box_path = os.path.join(part_path, "box" + str(box_index) + ".txt")
+                            box_info = self.parse_box_info(box_path)
+                            writing_window.add_box(box_info[0], box_info[1], box_info[2])
+
+    def parse_summary(self, summary_path):
+        file = open(summary_path, "r")
+        text = file.read()
+        return [text.split("_TITLE_")[1], QTextDocument(text.split("_TAGS_")[1]), QTextDocument(text.split("_DESCRIPTION_")[1])]
+
+    def parse_part(self, part_summary_path):
+        file = open(part_summary_path, "r")
+        text = file.read()
+        return [text.split("_TITLE_")[1], QTextDocument(text.split("_SYNOPSIS_")[1])]
+
+    def parse_box_info(self, box_info_path):
+        file = open(box_info_path, "r")
+        text = file.read()
+        return [text.split("_BUTTON_")[1], text.split("_TEXT_")[1], text.split("_COMMENTS_")[1]]

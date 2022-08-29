@@ -1,10 +1,11 @@
+from PyQt5.QtGui import QTextDocument
 from PyQt5.QtWidgets import QTextEdit, QSizePolicy
 
 import collapsableBox
 
 
 class BoxForStory(collapsableBox.CollapsableBox):
-    def __init__(self, text, id):
+    def __init__(self, button_text, id):
         self.id = id
 
         self.text_edit = QTextEdit()
@@ -14,7 +15,7 @@ class BoxForStory(collapsableBox.CollapsableBox):
         self.text_edit.setMaximumWidth(940)
         self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        super().__init__(text, self.text_edit)
+        super().__init__(button_text, self.text_edit)
 
     def get_id(self):
         return self.id
@@ -46,3 +47,12 @@ class BoxForStory(collapsableBox.CollapsableBox):
 
     def to_html(self):
         return self.text_edit.toHtml()
+
+    def comments(self):
+        return self.comment_text_edit.toPlainText()
+
+    def load_text(self, html_text, comments):
+        doc = QTextDocument()
+        doc.setHtml(html_text)
+        self.text_edit.setDocument(doc)
+        self.comment_text_edit.setText(comments)

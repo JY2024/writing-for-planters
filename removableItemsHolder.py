@@ -31,7 +31,6 @@ class RemovableItemsHolder(QGroupBox):
     def on_create_ok(self, widget):
         my_part_summary = None
         my_part = None
-        cur_path = None
         if len(self.parts.keys()) == 0 or widget.get_title() not in self.parts:
             if isinstance(widget, workCreationWidget.WorkCreationWidget):
                 # For creating a work summary in works window
@@ -97,6 +96,12 @@ class RemovableItemsHolder(QGroupBox):
 
     def get_parts(self):
         return self.parts
+
+    def add_part(self, title, summary, part):
+        self.parts[title] = [summary, part]
+
+    def add_widget(self, widget):
+        self.main_layout.addWidget(widget)
 
 
 

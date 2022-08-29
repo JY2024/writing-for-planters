@@ -113,7 +113,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             self.line_edit.setText("")
 
             box_file = open(os.path.join(self.path, "box" + str(self.num_parts) + ".txt"), "w+")
-            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_"
+            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
 
@@ -283,7 +283,16 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     def get_path(self):
         return self.path
 
-
+    def add_box(self, header_text, box_text, comment_text):
+        self.num_parts += 1
+        box = boxForStory.BoxForStory(header_text, self.num_parts)
+        box.load_text(box_text, comment_text)
+        self.boxes_layout.addWidget(box)
+        bullet = bulletPoint.BulletPoint(header_text, self, box, self.num_parts)
+        self.group_box_layout.addLayout(bullet)
+        if self.first_box_index == None:
+            self.first_box_index = self.boxes_layout.indexOf(box)
+        self.line_edit.setText("")
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):
