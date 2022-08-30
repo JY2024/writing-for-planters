@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QTextDocument
+from PyQt5.QtGui import QTextDocument, QPixmap
 
 import designFunctions
 import partSummary
@@ -10,7 +10,7 @@ import workCreationWidget
 import workSummary
 import workPage
 import scrollableWindow
-from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox, QStyle
+from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox, QStyle, QLabel
 
 import writingWindow
 
@@ -18,6 +18,10 @@ import writingWindow
 class WorksWindow(scrollableWindow.ScrollableWindow):
     def __init__(self):
         self.layout = QVBoxLayout()
+        self.img = QPixmap("writing_icon.png")
+        self.img_label = QLabel()
+        self.img_label.setPixmap(self.img)
+        self.layout.addWidget(self.img_label)
         self.create_button = designFunctions.generate_button("Create New Work")
         self.layout.addWidget(self.create_button)
         self.open_button = designFunctions.generate_button("Open Work")
@@ -43,6 +47,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
 
     def on_help(self):
         msg = QMessageBox()
+        msg.setWindowTitle("Help")
         msg.setText("[Works Window]\n - Create works and select a directory for the work when prompted." +
                     "\n - OR Select a work directory to open.\n - Edit work tags and descriptions.\n\n" +
                     "[Work Page]\n - Add and remove parts.\n - Edit part summaries.\n - EXPORT to GDrive or print/pdf\n" +

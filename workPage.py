@@ -24,6 +24,7 @@ class Popup(scrollableWindow.ScrollableWindow):
         self.layout.addWidget(self.text_edit)
 
         super().__init__("Preview", QSize(1000, 700), self.layout)
+        self.setStyleSheet("background-color: white")
 
 class WorkPage(scrollableWindow.ScrollableWindow):
     def __init__(self, parent, title, tags, description, path):
@@ -38,7 +39,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.export_button = designFunctions.generate_button("Export")
         self.preview_button = designFunctions.generate_button("Preview")
         self.local_save_button = designFunctions.generate_button("Local Save")
-        self.title_label = designFunctions.generate_label(title, font_size="30px", bold=True, alignment=Qt.AlignCenter)
+        self.title_label = designFunctions.generate_label(title, font_size="30px", bold=True)
 
         self.tag_label = designFunctions.generate_textEdit(tags, font_size="14px", border=True, size=QSize(700, 100),
                                                            read_only=True, alignment=Qt.AlignCenter)
@@ -136,8 +137,16 @@ class WorkPage(scrollableWindow.ScrollableWindow):
             self.get_doc().print(dlg.printer())
 
     def on_upload(self):
+        # Save
+        self.on_local_save()
+        parts = self.removable_items.get_parts()
+        for key in parts.keys():
+            parts[key][1].on_local_save()
+
         if not self.authorized:
             self.gauth.LocalWebserverAuth()
+            if self.gauth == "":
+                return
             self.authorized = True
             self.drive = GoogleDrive(self.gauth)
 

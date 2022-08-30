@@ -12,7 +12,9 @@ class PartCreationWidget(QWidget):
 
         self.layout = QVBoxLayout()
         self.title = QLineEdit()
+        self.title.setStyleSheet("background-color: rgb(243,240,240)")
         self.synopsis = QTextEdit()
+        self.synopsis.setStyleSheet("background-color: rgb(243,240,240)")
 
         self.layout.addWidget(designFunctions.generate_label("Part Title", size=QSize(100, 50)))
         self.layout.addWidget(self.title)

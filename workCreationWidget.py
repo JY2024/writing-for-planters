@@ -11,11 +11,11 @@ class WorkCreationWidget(QWidget):
 
         self.layout = QVBoxLayout()
         self.title = QLineEdit()
-        self.title.setStyleSheet("background-color: white")
+        self.title.setStyleSheet("background-color: rgb(243,240,240)")
         self.tags = QTextEdit()
-        self.tags.setStyleSheet("background-color: white")
+        self.tags.setStyleSheet("background-color: rgb(243,240,240)")
         self.description = QTextEdit()
-        self.description.setStyleSheet("background-color: white")
+        self.description.setStyleSheet("background-color: rgb(243,240,240)")
 
         self.layout.addWidget(designFunctions.generate_label("Title", size=QSize(100, 50)))
         self.layout.addWidget(self.title)
