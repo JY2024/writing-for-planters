@@ -62,7 +62,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         if os.path.exists(os.path.join(dir, "summary.txt")):
             work_info = self.parse_summary(os.path.join(dir, "summary.txt"))
             work_page = workPage.WorkPage(self, work_info[0], work_info[1], work_info[2], dir)
-            work_summary = workSummary.WorkSummary(self.removable_items, work_info[0], work_info[1], work_info[2], work_page)
+            work_summary = workSummary.WorkSummary(self, self.removable_items, work_info[0], work_info[1], work_info[2], work_page)
             self.removable_items.add_part(work_info[0], work_summary, work_page)
             self.removable_items.add_widget(work_summary)
 
@@ -72,7 +72,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
                 if os.path.isdir(part_path):
                     part_info = self.parse_part(os.path.join(part_path, "header.txt"))
                     writing_window = writingWindow.WritingWindow(work_page, part_info[0], part_path)
-                    part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1])
+                    part_summary = partSummary.PartSummary(work_page, work_page.removable_items, part_info[0], part_info[1])
                     work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
                     work_page.removable_items.add_widget(part_summary)
 

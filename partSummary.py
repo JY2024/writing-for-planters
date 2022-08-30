@@ -5,8 +5,9 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QCheckBox, QVBoxLayout
 
 
 class PartSummary(QWidget):
-    def __init__(self, parent, title, synopsis):
+    def __init__(self, parent, item_holder, title, synopsis):
         super().__init__()
+        self.item_holder = item_holder
         self.my_parent = parent
         self.title = title
 
@@ -34,7 +35,8 @@ class PartSummary(QWidget):
         self.title_button.clicked.connect(self.on_title_clicked)
 
     def on_title_clicked(self):
-        self.my_parent.open_part(self.title)
+        self.item_holder.open_part(self.title)
+        self.my_parent.close()
 
     def get_synopsis(self):
         return self.synopsis_label.toPlainText()

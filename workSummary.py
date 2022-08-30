@@ -6,8 +6,9 @@ import designFunctions
 
 
 class WorkSummary(QWidget):
-    def __init__(self, parent, title, tags, description, matching_part):
+    def __init__(self, parent, item_holder, title, tags, description, matching_part):
         super().__init__()
+        self.item_holder = item_holder
         self.my_parent = parent
         self.matching_part = matching_part
 
@@ -33,7 +34,8 @@ class WorkSummary(QWidget):
         self.description_label.textChanged.connect(self.on_text_changed)
 
     def on_title_clicked(self):
-        self.my_parent.open_part(self.title_button.text())
+        self.item_holder.open_part(self.title_button.text())
+        self.my_parent.close()
 
     def get_title(self):
         return self.title_button.text()

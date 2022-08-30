@@ -40,7 +40,7 @@ class RemovableItemsHolder(QGroupBox):
                                                             options=QFileDialog.ShowDirsOnly)  # Path to new folder
                 if cur_path != "":
                     my_part = self.part(self.parent, widget.get_title(), widget.get_tags(), widget.get_description(), cur_path)
-                    my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
+                    my_part_summary = self.part_summary(self.parent, self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
 
                     # Save title, description, and tags
                     work_summary_file = open(os.path.join(cur_path, "summary.txt"), "w+")
@@ -53,7 +53,7 @@ class RemovableItemsHolder(QGroupBox):
                 dir_path = os.path.join(self.path, "part" + widget.get_title() + ".dir")
                 os.mkdir(dir_path)
                 # For creating a part summary in a work page
-                my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description())
+                my_part_summary = self.part_summary(self.parent, self, widget.get_title(), widget.get_description())
                 my_part = self.part(self.parent, widget.get_title(), dir_path)
                 # Save part title and synopsis
                 part_header_file = open(os.path.join(dir_path, "header.txt"), "w+")
