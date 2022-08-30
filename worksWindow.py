@@ -11,7 +11,7 @@ import workCreationWidget
 import workSummary
 import workPage
 import scrollableWindow
-from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QMessageBox, QStyle
 
 import writingWindow
 
@@ -23,8 +23,14 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.layout.addWidget(self.create_button)
         self.open_button = designFunctions.generate_button("Open Work")
         self.layout.addWidget(self.open_button)
+        self.help_button = designFunctions.generate_button("")
+        self.layout.addWidget(self.help_button)
 
         super().__init__("Works", QSize(900, 700), self.layout)
+
+        pixmapi = getattr(QStyle, "SP_FileDialogInfoView")
+        icon = self.style().standardIcon(pixmapi)
+        self.help_button.setIcon(icon)
 
         self.removable_items = removableItemsHolder.RemovableItemsHolder(self.create_button, None,
                                                                          workCreationWidget.WorkCreationWidget,
@@ -34,6 +40,19 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
 
         self.create_button.clicked.connect(self.removable_items.on_create_clicked)
         self.open_button.clicked.connect(self.open_work)
+        self.help_button.clicked.connect(self.on_help)
+
+    def on_help(self):
+        msg = QMessageBox()
+        msg.setText("[Works Window]\n - Create works and select a directory for the work when prompted." +
+                    "\n - OR Select a work directory to open.\n - Edit work tags and descriptions.\n\n" +
+                    "[Work Page]\n - Add and remove parts.\n - Edit part summaries.\n - EXPORT to GDrive or print/pdf\n" +
+                    " - LOCAL SAVE (Ctrl+S) work to existing work directory\n - PREVIEW as pdf.\n\n[Part Window]\n" +
+                    " - LOCAL SAVE (Ctrl+S) work to existing work directory\n - EDIT MODE to rearrange and rename bulletpoints.\n" +
+                    " - Tip: Alt+E to enter new bulletpoint.\n - Tip: Ctrl+o to go to top of page\n" +
+                    " - Tip: Ctrl+H to add/select new placeholder to insert.\n\t(MANAGE PLACEHOLDERS to see all occurences of one placeholder.")
+        msg.setIcon(QMessageBox.Information)
+        msg.exec()
 
     def open_work(self):
         dir = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
