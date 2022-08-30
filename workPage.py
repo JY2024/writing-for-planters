@@ -1,9 +1,9 @@
 import os
 
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QTextDocument
+from PyQt5.QtGui import QTextDocument, QKeySequence
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox, QShortcut
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -78,6 +78,9 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.preview_button.clicked.connect(self.on_preview)
         self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
         self.local_save_button.clicked.connect(self.on_local_save)
+
+        save_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+S")), self)
+        save_shortcut.activated.connect(self.on_local_save)
 
     def set_tags(self, text):
         self.tag_label.setDocument(QTextDocument(text))

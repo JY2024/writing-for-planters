@@ -1,5 +1,4 @@
 import os
-import pathlib
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QTextDocument
@@ -91,6 +90,8 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
     def parse_holders(self, holders_path):
         text = self.get_text(holders_path)
         info = [[], []]
+        if text == "_HOLDERS__HOLDERS_":
+            return info
         paired_info = text.split("_HOLDER_")
         for pair in paired_info:
             if pair != "":
