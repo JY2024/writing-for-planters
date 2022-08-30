@@ -17,13 +17,14 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtWidgets import (
     QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGroupBox, QShortcut, QMenu,
-    QColorDialog, QAction
+    QColorDialog, QAction, QStyle
 )
 
 
 # Writing window
 class WritingWindow(scrollableWindow.ScrollableWindow):
-    def __init__(self, title, path):
+    def __init__(self, parent, title, path):
+        self.parent = parent
         self.path = path
         self.num_parts = 0
         # Outline and Story labels
@@ -48,6 +49,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         outline_layout.addWidget(self.group_box)
 
         # Buttons
+        self.back_button = designFunctions.generate_button(background_color="light grey", size=QSize(30, 30))
         self.local_save_button = designFunctions.generate_button("Local &Save")
         self.enter_button = designFunctions.generate_button("&Enter", checkable=False)
         self.remove_button = designFunctions.generate_button("Remove", checkable=True)
@@ -62,6 +64,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
         # Main Layout
         self.main_layout = QVBoxLayout()
+        self.main_layout.addWidget(self.back_button)
         self.main_layout.addWidget(self.local_save_button)
         self.main_layout.addWidget(self.outline_label)
         self.main_layout.addLayout(outline_layout)
@@ -77,6 +80,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
 
         super().__init__(title, QSize(1000, 800), self.main_layout)
 
+        pixmapi = getattr(QStyle, "SP_ArrowBack")
+        icon = self.style().standardIcon(pixmapi)
+        self.back_button.setIcon(icon)
+
         self.placeholders = PlaceHolderMechanism(self)
 
         # Connect signals
@@ -86,6 +93,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.edit_button.clicked.connect(self.on_enter_edit_ok)
         self.placeholders_button.clicked.connect(self.on_placeholders_manage)
         self.local_save_button.clicked.connect(self.on_local_save)
+        self.back_button.clicked.connect(self.on_back)
 
         # Shortcuts
         to_top_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+O")), self)
@@ -98,6 +106,10 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         save_shortcut.activated.connect(self.on_local_save)
 
         self.first_box_index = None
+
+    def on_back(self):
+        self.parent.show()
+        self.close()
 
     # when button is clicked, place text into outline group of buttons
     def enter_was_clicked(self):
@@ -239,7 +251,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 box.set_writing(temp_text)
 
     def on_to_top(self):
-        self.scroll.ensureWidgetVisible(self.local_save_button)
+        self.scroll.ensureWidgetVisible(self.back_button)
 
     def get_all_text(self):
         text = ""

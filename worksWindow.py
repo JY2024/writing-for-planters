@@ -31,7 +31,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         icon = self.style().standardIcon(pixmapi)
         self.help_button.setIcon(icon)
 
-        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.create_button, None,
+        self.removable_items = removableItemsHolder.RemovableItemsHolder(self, self.create_button, None,
                                                                          workCreationWidget.WorkCreationWidget,
                                                                          workSummary.WorkSummary, workPage.WorkPage, None)
 
@@ -61,7 +61,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
     def load_state(self, dir):
         if os.path.exists(os.path.join(dir, "summary.txt")):
             work_info = self.parse_summary(os.path.join(dir, "summary.txt"))
-            work_page = workPage.WorkPage(work_info[0], work_info[1], work_info[2], dir)
+            work_page = workPage.WorkPage(self, work_info[0], work_info[1], work_info[2], dir)
             work_summary = workSummary.WorkSummary(self.removable_items, work_info[0], work_info[1], work_info[2], work_page)
             self.removable_items.add_part(work_info[0], work_summary, work_page)
             self.removable_items.add_widget(work_summary)
@@ -71,7 +71,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
                 part_path = os.path.join(dir, file_name)
                 if os.path.isdir(part_path):
                     part_info = self.parse_part(os.path.join(part_path, "header.txt"))
-                    writing_window = writingWindow.WritingWindow(part_info[0], part_path)
+                    writing_window = writingWindow.WritingWindow(work_page, part_info[0], part_path)
                     part_summary = partSummary.PartSummary(work_page.removable_items, part_info[0], part_info[1])
                     work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
                     work_page.removable_items.add_widget(part_summary)

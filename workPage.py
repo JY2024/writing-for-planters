@@ -3,7 +3,8 @@ import os
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument, QKeySequence
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox, QShortcut, QGridLayout
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox, QShortcut, QGridLayout, \
+    QStyle
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -25,13 +26,15 @@ class Popup(scrollableWindow.ScrollableWindow):
         super().__init__("Preview", QSize(1000, 700), self.layout)
 
 class WorkPage(scrollableWindow.ScrollableWindow):
-    def __init__(self, title, tags, description, path):
+    def __init__(self, parent, title, tags, description, path):
+        self.parent = parent
         self.gauth = GoogleAuth()
         self.authorized = False
         self.drive = None
         self.path = path
         self.title = title
 
+        self.back_button = designFunctions.generate_button(background_color="light grey", size=QSize(30,30))
         self.export_button = designFunctions.generate_button("Export")
         self.preview_button = designFunctions.generate_button("Preview")
         self.local_save_button = designFunctions.generate_button("Local Save")
@@ -45,13 +48,14 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.add_part_button = designFunctions.generate_button("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 
-        self.removable_items = removableItemsHolder.RemovableItemsHolder(self.add_part_button, self.remove_button,
+        self.removable_items = removableItemsHolder.RemovableItemsHolder(self, self.add_part_button, self.remove_button,
                                                                          partCreationWidget.PartCreationWidget,
                                                                          partSummary.PartSummary,
                                                                          writingWindow.WritingWindow, path)
 
         self.main_layout = QVBoxLayout()
         self.main_layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+        self.main_layout.addWidget(self.back_button)
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.preview_button)
         self.top_layout.addWidget(self.export_button)
@@ -66,6 +70,10 @@ class WorkPage(scrollableWindow.ScrollableWindow):
 
         super().__init__(title, QSize(1000, 800), self.main_layout)
 
+        pixmapi = getattr(QStyle, "SP_ArrowBack")
+        icon = self.style().standardIcon(pixmapi)
+        self.back_button.setIcon(icon)
+
         self.popups = []
         self.mode_msg = QMessageBox()
         self.mode_msg.setWindowTitle("Export")
@@ -79,9 +87,14 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.preview_button.clicked.connect(self.on_preview)
         self.mode_msg.buttonClicked.connect(self.on_mode_clicked)
         self.local_save_button.clicked.connect(self.on_local_save)
+        self.back_button.clicked.connect(self.on_back)
 
         save_shortcut = QShortcut(QKeySequence(self.tr("Ctrl+S")), self)
         save_shortcut.activated.connect(self.on_local_save)
+
+    def on_back(self):
+        self.parent.show()
+        self.close()
 
     def set_tags(self, text):
         self.tag_label.setDocument(QTextDocument(text))

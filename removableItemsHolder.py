@@ -9,8 +9,9 @@ import workCreationWidget
 import checkboxFunctions
 
 class RemovableItemsHolder(QGroupBox):
-    def __init__(self, create_button, remove_button, part_creation_widget, part_summary, part, path):
+    def __init__(self, parent, create_button, remove_button, part_creation_widget, part_summary, part, path):
         super().__init__()
+        self.parent = parent
         self.path = path
         self.part_creation_widget = part_creation_widget
         self.part_summary = part_summary
@@ -38,7 +39,7 @@ class RemovableItemsHolder(QGroupBox):
                 cur_path = QFileDialog.getExistingDirectory(parent=self, caption="Select Directory",
                                                             options=QFileDialog.ShowDirsOnly)  # Path to new folder
                 if cur_path != "":
-                    my_part = self.part(widget.get_title(), widget.get_tags(), widget.get_description(), cur_path)
+                    my_part = self.part(self.parent, widget.get_title(), widget.get_tags(), widget.get_description(), cur_path)
                     my_part_summary = self.part_summary(self, widget.get_title(), widget.get_tags(), widget.get_description(), my_part)
 
                     # Save title, description, and tags
@@ -53,7 +54,7 @@ class RemovableItemsHolder(QGroupBox):
                 os.mkdir(dir_path)
                 # For creating a part summary in a work page
                 my_part_summary = self.part_summary(self, widget.get_title(), widget.get_description())
-                my_part = self.part(widget.get_title(), dir_path)
+                my_part = self.part(self.parent, widget.get_title(), dir_path)
                 # Save part title and synopsis
                 part_header_file = open(os.path.join(dir_path, "header.txt"), "w+")
                 part_header_string = "_TITLE_" + widget.get_title() + "_TITLE_SYNOPSIS_" + widget.get_description().toPlainText() + "_SYNOPSIS_"
