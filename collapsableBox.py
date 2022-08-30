@@ -17,11 +17,13 @@ class CollapsableBox(QWidget):
         pixmapi = getattr(QStyle, "SP_FileDialogDetailedView")
         icon = self.style().standardIcon(pixmapi)
         self.comment_button.setIcon(icon)
+        self.comment_button.setStyleSheet("background-color: rgb(196,235,196)")
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.button)
         self.top_layout.addWidget(self.comment_button)
 
         self.comment_text_edit = QTextEdit()
+        self.comment_text_edit.setStyleSheet("background-color: rgb(243,240,240)")
         self.comment_text_edit.setMaximumHeight(0)
         self.comment_text_edit.setMinimumHeight(0)
         self.comment_text_edit.setMaximumWidth(0)

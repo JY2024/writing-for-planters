@@ -33,9 +33,11 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         # Line Edit
         self.line_edit = QLineEdit()
         self.line_edit.setMaximumSize(QSize(500, 100))
+        self.line_edit.setStyleSheet("background-color: rgb(243,240,240)")
 
         # Group box for outline bullet points
         self.group_box = QGroupBox()
+        self.group_box.setStyleSheet("background-color: rgb(243,240,240)")
         self.group_box_layout = QVBoxLayout()
         self.group_box.setLayout(self.group_box_layout)
         self.group_box.setMaximumSize(QSize(500, 500))

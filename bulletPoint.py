@@ -7,6 +7,7 @@ class BulletPoint(QHBoxLayout):
         self.my_box = my_box
         super().__init__(my_parent)
         self.button = QPushButton(text)
+        self.button.setStyleSheet("background-color: light grey")
         self.check_box = QCheckBox()
         self.addWidget(self.button)
         self.addWidget(self.check_box)

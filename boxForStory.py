@@ -13,6 +13,7 @@ class BoxForStory(collapsableBox.CollapsableBox):
         self.text_edit.setMaximumHeight(0)
         self.text_edit.setMinimumHeight(0)
         self.text_edit.setMaximumWidth(940)
+        self.text_edit.setStyleSheet("background-color: rgb(243,240,240)")
         self.text_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         super().__init__(button_text, self.text_edit)
