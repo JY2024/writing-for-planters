@@ -73,7 +73,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.main_layout.addLayout(self.below_story_layout)
         self.main_layout.addWidget(self.box_for_boxes)
 
-        super().__init__(title, QSize(1000, 700), self.main_layout)
+        super().__init__(title, QSize(1000, 800), self.main_layout)
 
         self.placeholders = PlaceHolderMechanism(self)
 

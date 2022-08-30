@@ -1,11 +1,10 @@
 import os
 import shutil
 
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout, QLabel, QFileDialog
 
 import customDialog
-import partCreationWidget
 import workCreationWidget
 import checkboxFunctions
 
@@ -19,6 +18,7 @@ class RemovableItemsHolder(QGroupBox):
         self.remove_button = remove_button
         self.create_button = create_button
         self.main_layout = QVBoxLayout()
+        self.main_layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.setLayout(self.main_layout)
         self.parts = {}
 

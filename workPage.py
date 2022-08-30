@@ -3,11 +3,10 @@ import os
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QTextDocument, QKeySequence
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
-from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox, QShortcut
+from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QHBoxLayout, QTextEdit, QMessageBox, QShortcut, QGridLayout
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-import boxForInfo
 import partCreationWidget
 import removableItemsHolder
 import writingWindow
@@ -63,7 +62,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.main_layout.addWidget(self.remove_button)
         self.main_layout.addWidget(self.removable_items)
 
-        super().__init__(title, QSize(900, 700), self.main_layout)
+        super().__init__(title, QSize(1000, 800), self.main_layout)
 
         self.popups = []
         self.mode_msg = QMessageBox()

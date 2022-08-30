@@ -7,6 +7,7 @@ class ScrollableWindow(QMainWindow):
 
         self.setWindowTitle(window_title)
         self.setFixedSize(window_size)
+        self.setStyleSheet("background-color: rgb(232,227,210);")
 
         widget = QWidget()
         widget.setLayout(main_layout)

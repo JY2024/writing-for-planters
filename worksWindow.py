@@ -25,7 +25,7 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.help_button = designFunctions.generate_button("")
         self.layout.addWidget(self.help_button)
 
-        super().__init__("Works", QSize(900, 700), self.layout)
+        super().__init__("Works", QSize(1000, 800), self.layout)
 
         pixmapi = getattr(QStyle, "SP_FileDialogInfoView")
         icon = self.style().standardIcon(pixmapi)
