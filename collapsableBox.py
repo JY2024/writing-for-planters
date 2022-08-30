@@ -73,6 +73,12 @@ class CollapsableBox(QWidget):
 
         self.setLayout(self.layout)
 
+    def get_comment(self):
+        return self.comment_text_edit.toPlainText()
+
+    def set_comment(self, text):
+        self.comment_text_edit.setText(text)
+
     def button_was_clicked(self):
         checked = self.get_checked()
         if checked:

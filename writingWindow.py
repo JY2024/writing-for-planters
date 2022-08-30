@@ -243,12 +243,15 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 temp = self.boxes_layout.itemAt(target_index).widget()
                 temp_title = temp.text()
                 temp_text = temp.get_written_work()
+                temp_comment = temp.get_comment()
 
                 temp.set_text(box.text())
                 temp.set_writing(box.get_written_work())
+                temp.set_comment(box.get_comment())
 
                 box.set_text(temp_title)
                 box.set_writing(temp_text)
+                box.set_comment(temp_comment)
 
     def on_to_top(self):
         self.scroll.ensureWidgetVisible(self.back_button)
