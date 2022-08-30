@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox
 
 import designFunctions
@@ -10,15 +11,15 @@ class WorkSummary(QWidget):
         self.my_parent = parent
         self.matching_part = matching_part
 
-        self.setMinimumSize(QSize(700, 300))
-        self.setMaximumSize(QSize(700, 300))
+        self.setMinimumSize(QSize(620, 400))
+        self.setMaximumSize(QSize(620, 400))
 
-        self.title_button = designFunctions.generate_button(title, background_color="rgb(178,228,178)", border=True, bold=True,
-                                                           font_size="20px", size=QSize(400, 50))
+        self.title_button = designFunctions.generate_button(title, background_color="rgb(196,235,196)", border=True,
+                                                           font_size="20px", size=QSize(600, 50))
         self.tag_label = designFunctions.generate_textEdit(tags, border=True, font_size="14px",
-                                                       size=QSize(600, 100), alignment=Qt.AlignCenter)
+                                                       size=QSize(600, 100))
         self.description_label = designFunctions.generate_textEdit(description, border=True, font_size="14px",
-                                                                   size=QSize(600, 100), alignment=Qt.AlignCenter)
+                                                                   size=QSize(600, 200))
 
         self.main_layout = QVBoxLayout()
 

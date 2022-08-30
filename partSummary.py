@@ -10,21 +10,20 @@ class PartSummary(QWidget):
         self.my_parent = parent
         self.title = title
 
-        self.setMinimumSize(QSize(500, 300))
-        self.setMaximumSize(QSize(500, 300))
+        self.setMinimumSize(QSize(650, 250))
+        self.setMaximumSize(QSize(650, 250))
 
         self.top_layout = QHBoxLayout()
         self.title_button = designFunctions.generate_button(
-            title, bold=True, border=True, size=QSize(400, 50),
-            background_color="white"
+            text=title, border=True, size=QSize(400, 30),
+            background_color="rgb(196,235,196)"
         )
         self.top_layout.addWidget(self.title_button)
         # Completion status
         self.check_box = QCheckBox()
         self.check_box.hide()
         self.top_layout.addWidget(self.check_box)
-        self.synopsis_label = designFunctions.generate_textEdit(doc=synopsis, font_size="14px", border=True,
-                                                            background_color="white", size=QSize(400, 200))
+        self.synopsis_label = designFunctions.generate_textEdit(doc=synopsis, font_size="14px", border=True, size=QSize(600, 200))
 
         self.main_layout = QVBoxLayout()
 

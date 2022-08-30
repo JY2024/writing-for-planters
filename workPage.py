@@ -35,13 +35,14 @@ class WorkPage(scrollableWindow.ScrollableWindow):
         self.export_button = designFunctions.generate_button("Export")
         self.preview_button = designFunctions.generate_button("Preview")
         self.local_save_button = designFunctions.generate_button("Local Save")
-        self.title_label = designFunctions.generate_label(title, font_size="40px", bold=True, alignment=Qt.AlignCenter)
+        self.title_label = designFunctions.generate_label(title, font_size="30px", bold=True, alignment=Qt.AlignCenter)
 
-        self.tag_label = designFunctions.generate_textEdit(tags, font_size="14px", border=True, size=QSize(800, 200),
-                                                       background_color="white", read_only=True)
+        self.tag_label = designFunctions.generate_textEdit(tags, font_size="14px", border=True, size=QSize(700, 100),
+                                                           read_only=True, alignment=Qt.AlignCenter)
         self.description_label = designFunctions.generate_textEdit(description, font_size="14px", border=True,
-                                                               size=QSize(800, 200), background_color="white", read_only=True)
-        self.add_part_button = QPushButton("Add Part")
+                                                               size=QSize(700, 150), read_only=True,
+                                                                   alignment=Qt.AlignCenter)
+        self.add_part_button = designFunctions.generate_button("Add Part")
         self.remove_button = designFunctions.generate_button("Remove Part", checkable=True)
 
         self.removable_items = removableItemsHolder.RemovableItemsHolder(self.add_part_button, self.remove_button,
@@ -50,6 +51,7 @@ class WorkPage(scrollableWindow.ScrollableWindow):
                                                                          writingWindow.WritingWindow, path)
 
         self.main_layout = QVBoxLayout()
+        self.main_layout.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.top_layout = QHBoxLayout()
         self.top_layout.addWidget(self.preview_button)
         self.top_layout.addWidget(self.export_button)

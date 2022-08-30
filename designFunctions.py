@@ -14,7 +14,7 @@ def generate_button(text="", background_color="rgb(209,192,123)", font_size="15p
     button.setCheckable(checkable)
     return general_visual_setup(button, background_color, font_size, bold, border, size, None)
 
-def generate_textEdit(doc=QTextDocument(""), background_color="rgb(233,227,227)", font_size="20px", bold=False, border=False,
+def generate_textEdit(doc=QTextDocument(""), background_color="rgb(243,240,240)", font_size="20px", bold=False, border=False,
                       size=QSize(870, 50), alignment=Qt.AlignLeft, read_only=False):
     text_edit = QTextEdit()
     text_edit.setDocument(doc)
@@ -25,7 +25,7 @@ def general_visual_setup(widget, background_color, font_size, bold, border, size
     font = font_size if not bold else ("bold " + font_size)
     style_sheet = "background-color: " + background_color + "; font: " + font
     if border:
-        style_sheet += "; border: 1px solid black"
+        style_sheet += "; border: 0.5px solid black"
     widget.setStyleSheet(style_sheet)
     widget.setFixedSize(size)
     if alignment != None:
