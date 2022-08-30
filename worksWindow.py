@@ -58,24 +58,41 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
                     work_page.removable_items.add_part(part_info[0], part_summary, writing_window)
                     work_page.removable_items.add_widget(part_summary)
 
+                    # Placeholders set up
+                    placeholders_info = self.parse_holders(os.path.join(part_path, "placeholders.txt"))
+                    writing_window.add_placeholders(placeholders_info[0], placeholders_info[1])
+
                     # For each box
                     for box_file_name in os.listdir(part_path):
                         box_file_path = os.path.join(part_path, box_file_name)
-                        if os.path.isfile(box_file_path) and "header" not in box_file_path:
+                        if os.path.isfile(box_file_path) and "header" not in box_file_path and "placeholders" not in box_file_path:
                             box_info = self.parse_box_info(box_file_path)
                             writing_window.add_box(box_info[0], box_info[1], box_info[2])
 
+    def parse_holders(self, holders_path):
+        text = self.get_text(holders_path)
+        info = [[], []]
+        paired_info = text.split("_HOLDER_")
+        for pair in paired_info:
+            if pair != "":
+                info[0].append(pair.split(";")[0])
+                info[1].append(pair.split(";")[1])
+        return info
+
     def parse_summary(self, summary_path):
-        file = open(summary_path, "r")
-        text = file.read()
+        text = self.get_text(summary_path)
         return [text.split("_TITLE_")[1], QTextDocument(text.split("_TAGS_")[1]), QTextDocument(text.split("_DESCRIPTION_")[1])]
 
     def parse_part(self, part_summary_path):
-        file = open(part_summary_path, "r")
-        text = file.read()
+        text = self.get_text(part_summary_path)
         return [text.split("_TITLE_")[1], QTextDocument(text.split("_SYNOPSIS_")[1])]
 
     def parse_box_info(self, box_info_path):
-        file = open(box_info_path, "r")
-        text = file.read()
+        text = self.get_text(box_info_path)
         return [text.split("_BUTTON_")[1], text.split("_TEXT_")[1], text.split("_COMMENTS_")[1]]
+
+    def get_text(self, path):
+        file = open(path, "r")
+        text = file.read()
+        file.close()
+        return text

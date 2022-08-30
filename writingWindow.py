@@ -1,7 +1,7 @@
 import os
 
 from PyQt5 import QtCore
-from PyQt5.QtGui import QKeySequence, QCursor, QColorConstants, QColor, QTextDocument
+from PyQt5.QtGui import QKeySequence, QCursor, QColor, QTextDocument
 
 import boxForStory
 import collapsableBox
@@ -300,12 +300,22 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         self.line_edit.setText("")
 
     def on_local_save(self):
+        # Save placeholders
+        placeholders_str = self.placeholders.get_placeholders_string()
+        holders_file = open(os.path.join(self.path, "placeholders.txt"), "w+")
+        holders_file.write(placeholders_str)
+        holders_file.close()
+        # Save boxes and buttons
         boxes = self.get_all_boxes()
         for box in boxes:
             box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
             box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
+
+    def add_placeholders(self, placeholder_names, colors):
+        for (name, color) in zip(placeholder_names, colors):
+            self.placeholders.add_placeholder(name, QColor.fromRgb(int(color)))
 
 class PlaceHolderMechanism(QMenu):
     def __init__(self, parent):
@@ -321,6 +331,12 @@ class PlaceHolderMechanism(QMenu):
 
         self.window = None
 
+    def get_placeholders_string(self):
+        string = ""
+        for holder_name in self.placeholders.keys():
+            string += "_HOLDER_" + holder_name + ";" + str(self.placeholders[holder_name].rgb()) + "_HOLDER_"
+        return string
+
     def show_menu(self, pos, cur_box):
         self.cur_box = cur_box
         self.popup(pos)
@@ -335,13 +351,13 @@ class PlaceHolderMechanism(QMenu):
         dlg = QColorDialog()
         color = dlg.getColor()
 
-        self.placeholders[widget.text()] = color  # Add new to entries: "name" - [color, array of points]
-        self.addAction(widget.text(), self.triggered)
+        self.add_placeholder(widget.text(), color)
 
         if self.cur_box != None and (self.cur_box.text_edit.hasFocus() or self.cur_box.comment_text_edit.hasFocus()):
             self.add_to_existing(widget.text())
 
     def add_to_existing(self, key):
+        self.cur_box = self.parent.get_current_box()
         self.cur_box.set_text_color(self.placeholders[key])
         self.cur_box.append_text(key)
         self.cur_box.set_text_color(QColor(0, 0, 0))
@@ -360,6 +376,10 @@ class PlaceHolderMechanism(QMenu):
     def on_show_placeholders_positions(self, action):
         self.window = PlaceholderSummaryDisplay(self.parent, action.text())
         self.window.show()
+
+    def add_placeholder(self, text, color):
+        self.placeholders[text] = color
+        self.addAction(text, self.triggered)
 
 
 class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):

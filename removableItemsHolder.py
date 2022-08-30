@@ -59,6 +59,9 @@ class RemovableItemsHolder(QGroupBox):
                 part_header_string = "_TITLE_" + widget.get_title() + "_TITLE_SYNOPSIS_" + widget.get_description().toPlainText() + "_SYNOPSIS_"
                 part_header_file.write(part_header_string)
                 part_header_file.close()
+                # Placeholders
+                placeholders_file = open(os.path.join(dir_path, "placeholders.txt"), "w+")
+                placeholders_file.write("_HOLDERS__HOLDERS_")
             self.main_layout.addWidget(my_part_summary)
             self.parts[widget.get_title()] = [my_part_summary, my_part]
 
