@@ -81,9 +81,10 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
                     writing_window.add_placeholders(placeholders_info[0], placeholders_info[1])
 
                     # For each box
-                    for box_file_name in os.listdir(part_path):
-                        box_file_path = os.path.join(part_path, box_file_name)
-                        if os.path.isfile(box_file_path) and "header" not in box_file_path and "placeholders" not in box_file_path:
+                    box_order_info = self.parse_box_order_info(os.path.join(part_path, "box_order.txt"))
+                    for box_name in box_order_info:
+                        if box_name != "":
+                            box_file_path = os.path.join(part_path, "box" + box_name + ".txt")
                             box_info = self.parse_box_info(box_file_path)
                             writing_window.add_box(box_info[0], box_info[1], box_info[2])
 
@@ -110,6 +111,10 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
     def parse_box_info(self, box_info_path):
         text = self.get_text(box_info_path)
         return [text.split("_BUTTON_")[1], text.split("_TEXT_")[1], text.split("_COMMENTS_")[1]]
+
+    def parse_box_order_info(self, box_order_path):
+        text = self.get_text(box_order_path)
+        return text.split(";")
 
     def get_text(self, path):
         file = open(path, "r")

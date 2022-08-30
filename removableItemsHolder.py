@@ -63,6 +63,11 @@ class RemovableItemsHolder(QGroupBox):
                 # Placeholders
                 placeholders_file = open(os.path.join(dir_path, "placeholders.txt"), "w+")
                 placeholders_file.write("_HOLDERS__HOLDERS_")
+                placeholders_file.close()
+                # Box order
+                box_order_file = open(os.path.join(dir_path, "box_order.txt"), "w+")
+                box_order_file.write("")
+                box_order_file.close()
             self.main_layout.addWidget(my_part_summary)
             self.parts[widget.get_title()] = [my_part_summary, my_part]
 

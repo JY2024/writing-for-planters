@@ -324,11 +324,18 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         holders_file.close()
         # Save boxes and buttons
         boxes = self.get_all_boxes()
+        box_order = []
         for box in boxes:
+            box_order.append(box.text())
             box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
             box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
+
+        box_order_file = open(os.path.join(self.path, "box_order.txt"), "w+")
+        for box_name in box_order:
+            box_order_file.write(box_name + ";")
+        box_order_file.close()
 
     def add_placeholders(self, placeholder_names, colors):
         for (name, color) in zip(placeholder_names, colors):
