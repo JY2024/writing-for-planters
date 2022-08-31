@@ -1,12 +1,13 @@
-from PyQt5.QtCore import QSize, QUrl
-from PyQt5.QtGui import QPixmap, QDesktopServices
-from PyQt5.QtWidgets import QGroupBox, QGridLayout, QVBoxLayout, QLabel, QFileDialog, QLineEdit, QPushButton
-
 import collapsableBox
 import customDialog
 import designFunctions
 import scrollableWindow
 
+from PyQt5.QtCore import QSize, QUrl
+from PyQt5.QtGui import QDesktopServices, QPixmap
+from PyQt5.QtWidgets import QFileDialog, QGridLayout, QGroupBox, QLabel, QLineEdit, QPushButton, QVBoxLayout
+
+# General box widget and accompanying comment box
 class BoxForInfo(collapsableBox.CollapsableBox):
     def __init__(self):
         self.add_button = designFunctions.generate_button("Insert New Media")

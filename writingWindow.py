@@ -131,8 +131,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 self.first_box_index = self.boxes_layout.indexOf(box)
             self.line_edit.setText("")
 
-            box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
-            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
+            box_file = open(os.path.join(self.path, "box" + box.get_button_text() + ".txt"), "w+")
+            box_str = "_BUTTON_" + box.get_button_text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.get_comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
 
@@ -183,8 +183,8 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
                 box = self.find_matching_box(bullet.get_text())
                 if box != None:
                     # Remove from directory
-                    if os.path.exists(os.path.join(self.path, "box" + box.text() + ".txt")):
-                        os.remove(os.path.join(self.path, "box" + box.text() + ".txt"))
+                    if os.path.exists(os.path.join(self.path, "box" + box.get_button_text() + ".txt")):
+                        os.remove(os.path.join(self.path, "box" + box.get_button_text() + ".txt"))
                     self.boxes_layout.removeWidget(box)
                     bullet.remove_items()
                     self.group_box_layout.removeItem(bullet)
@@ -193,7 +193,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
     def find_matching_box(self, text):
         for i in range(self.boxes_layout.count()):
             item = self.boxes_layout.itemAt(i).widget()
-            if item != None and item.text() == text:
+            if item != None and item.get_button_text() == text:
                 return item
         return None
 
@@ -209,7 +209,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             item = self.boxes_layout.itemAt(i).widget()
             if isinstance(item, collapsableBox.CollapsableBox) and cond(item.get_checked()):
                 item.toggle_checked()
-                item.button_was_clicked()
+                item.on_text_button_clicked()
 
     def is_duplicate_bullet(self, text):
         for bullet in self.group_box.findChildren(bulletPoint.BulletPoint):
@@ -232,7 +232,7 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         bullet_points = self.group_box.findChildren(bulletPoint.BulletPoint)
         line_edits = widget.sorted_children()
         for (bullet, line_edit) in zip(bullet_points, line_edits):
-            bullet.set_text(line_edit.text())
+            bullet.set_button_text(line_edit.text())
 
         # Change the box texts
         for i in range(len(line_edits)):
@@ -241,15 +241,15 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             index_of_box = self.boxes_layout.indexOf(box)
             if index_of_box != target_index:
                 temp = self.boxes_layout.itemAt(target_index).widget()
-                temp_title = temp.text()
+                temp_title = temp.get_button_text()
                 temp_text = temp.get_written_work()
                 temp_comment = temp.get_comment()
 
-                temp.set_text(box.text())
+                temp.set_button_text(box.get_button_text())
                 temp.set_writing(box.get_written_work())
                 temp.set_comment(box.get_comment())
 
-                box.set_text(temp_title)
+                box.set_button_text(temp_title)
                 box.set_writing(temp_text)
                 box.set_comment(temp_comment)
 
@@ -326,9 +326,9 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
         boxes = self.get_all_boxes()
         box_order = []
         for box in boxes:
-            box_order.append(box.text())
-            box_file = open(os.path.join(self.path, "box" + box.text() + ".txt"), "w+")
-            box_str = "_BUTTON_" + box.text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.comments() + "_COMMENTS_"
+            box_order.append(box.get_button_text())
+            box_file = open(os.path.join(self.path, "box" + box.get_button_text() + ".txt"), "w+")
+            box_str = "_BUTTON_" + box.get_button_text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.get_comments() + "_COMMENTS_"
             box_file.write(box_str)
             box_file.close()
 
@@ -420,7 +420,7 @@ class PlaceholderSummaryDisplay(scrollableWindow.ScrollableWindow):
         for i in range(self.parent.boxes_layout.count()):
             item = self.parent.boxes_layout.itemAt(i).widget()
             if isinstance(item, collapsableBox.CollapsableBox) and item.has_placeholder(self.action_name):
-                self.layout.addWidget(QLabel(item.text()))
+                self.layout.addWidget(QLabel(item.get_button_text()))
                 label = designFunctions.generate_textEdit(
                     doc=QTextDocument(self.extract_text_excerpts(item.get_written_work())),
                     background_color="white", size=QSize(600, 400), read_only=True)
