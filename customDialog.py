@@ -17,7 +17,7 @@ class CustomDialog(QDialog):
     def init_ui(self):
         """Initializes UI for CustomDialog"""
         self.layout = QVBoxLayout()
-        self.layout.addWidget(self.widget)
+        self.layout.addWidget(self.main_widget)
         self.layout.addWidget(self.button_box)
         self.setLayout(self.layout)
         self.button_box.accepted.connect(self.on_ok)
