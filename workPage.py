@@ -148,6 +148,12 @@ class WorkPage(scrollableWindow.ScrollableWindow):
     def on_upload(self):
         """Locally saves, authorizes user to GDrive and uploads all text to a file in GDrive"""
         self.on_local_save()
+        if not os.path.exists(os.path.join(os.getcwd(), "client_secrets.json")):
+            msg = QMessageBox()
+            msg.setText("You need to upload a client_secrets.json first")
+            msg.setIcon(QMessageBox.Information)
+            msg.exec()
+
         parts = self.removable_items.get_parts()
         for key in parts.keys():
             parts[key][1].on_local_save()
