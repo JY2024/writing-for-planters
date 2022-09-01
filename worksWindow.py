@@ -23,7 +23,6 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.create_button = designFunctions.generate_button("Create New Work")
         self.open_button = designFunctions.generate_button("Open Work")
         self.help_button = designFunctions.generate_button("")
-        self.add_client_secrets_button = designFunctions.generate_button("Add Client Secrets")
         super().__init__("Works", QSize(1000, 800), self.layout)
         self.removable_items = removableItemsHolder.RemovableItemsHolder(self, self.create_button, None,
                                                                          workCreationWidget.WorkCreationWidget,
@@ -37,7 +36,6 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.layout.addWidget(self.create_button)
         self.layout.addWidget(self.open_button)
         self.layout.addWidget(self.help_button)
-        self.layout.addWidget(self.add_client_secrets_button)
         self.layout.addWidget(self.removable_items)
 
         pixmapi = getattr(QStyle, "SP_FileDialogInfoView")
@@ -47,7 +45,6 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         self.create_button.clicked.connect(self.removable_items.on_create_clicked)
         self.open_button.clicked.connect(self.open_work)
         self.help_button.clicked.connect(self.on_help)
-        self.add_client_secrets_button.clicked.connect(self.on_add_secret)
 
     def parse_holders(self, holders_path):
         """Takes holders_path: string, returns [[placeholder names][corresponding color names]]"""
@@ -138,11 +135,3 @@ class WorksWindow(scrollableWindow.ScrollableWindow):
         dir = str(QFileDialog.getExistingDirectory(parent=self, caption="Select Directory", options=QFileDialog.ShowDirsOnly))
         if dir != "":
             self.load_state(dir)
-
-    def on_add_secret(self):
-        """Adds client secret to current directory for GDrive upload"""
-        secrets_file = QFileDialog.getOpenFileName()
-        if secrets_file != None and "client_secrets.json" in secrets_file:
-            file = open(os.path.join(os.getcwd(), "client_secrets.json"), "w+")
-            file.write(secrets_file.read())
-            file.close()
