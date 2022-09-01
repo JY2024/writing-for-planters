@@ -190,8 +190,14 @@ class WritingWindow(scrollableWindow.ScrollableWindow):
             )
             dlg.exec()
         else:
-            self.add_box(text, "", "")
-            box = self.find_matching_box(text)
+            self.num_parts += 1
+            box = boxForStory.BoxForStory(text, self.num_parts)
+            self.boxes_layout.addWidget(box)
+            bullet = bulletPoint.BulletPoint(text, self, box, self.num_parts)
+            self.group_box_layout.addLayout(bullet)
+            if self.first_box_index == None:
+                self.first_box_index = self.boxes_layout.indexOf(box)
+            self.line_edit.setText("")
             box_file = open(os.path.join(self.path, "box" + box.get_button_text() + ".txt"), "w+")
             box_str = "_BUTTON_" + box.get_button_text() + "_BUTTON_TEXT_" + box.to_html() + "_TEXT_COMMENTS_" + box.get_comments() + "_COMMENTS_"
             box_file.write(box_str)

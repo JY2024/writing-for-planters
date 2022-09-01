@@ -16,19 +16,7 @@ class CollapsableBox(QWidget):
         self.button = designFunctions.generate_button(text, checkable=True, size=QSize(900, 50))
         self.comment_button = designFunctions.generate_button(text="", checkable=True, size=QSize(40, 40))
         self.comment_text_edit = QTextEdit()
-        self.init_ui()
 
-        self.animation_group_vertical = QParallelAnimationGroup()
-        self.animation_group_horizontal = QParallelAnimationGroup()
-        self.content_animation_vertical = QPropertyAnimation(self.item, b"maximumHeight")
-        self.content_animation_horizontal = QPropertyAnimation(self.item, b"maximumWidth")
-        self.comment_animation_vertical = QPropertyAnimation(self.comment_text_edit, b"maximumHeight")
-        self.comment_animation_horizontal = QPropertyAnimation(self.comment_text_edit, b"maximumWidth")
-
-        self.init_animations()
-
-    def init_ui(self):
-        """Initializes UI for CollapsableBox"""
         pixmapi = getattr(QStyle, "SP_FileDialogDetailedView")
         icon = self.style().standardIcon(pixmapi)
         self.comment_button.setIcon(icon)
@@ -53,6 +41,15 @@ class CollapsableBox(QWidget):
         self.comment_button.clicked.connect(self.on_comment_button_clicked)
 
         self.setLayout(self.layout)
+
+        self.animation_group_vertical = QParallelAnimationGroup()
+        self.animation_group_horizontal = QParallelAnimationGroup()
+        self.content_animation_vertical = QPropertyAnimation(self.item, b"maximumHeight")
+        self.content_animation_horizontal = QPropertyAnimation(self.item, b"maximumWidth")
+        self.comment_animation_vertical = QPropertyAnimation(self.comment_text_edit, b"maximumHeight")
+        self.comment_animation_horizontal = QPropertyAnimation(self.comment_text_edit, b"maximumWidth")
+
+        self.init_animations()
 
     def init_animations(self):
         """Initializes animations for CollapsableBox"""

@@ -10,6 +10,7 @@ class DraggableLabel(QLineEdit):
         self.setText(text)
         self.id = id
         self.drag_start_pos = None
+        self.init_ui()
 
     def init_ui(self):
         """Initializes UI for DraggableLabel"""
