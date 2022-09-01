@@ -28,6 +28,14 @@ Creating an executable with pyinstaller: <a href="https://towardsdatascience.com
 
 ## Screenshots
 
+![Screenshot of works window](screenshots/screenshot1.png?raw=true)
+![Screenshot of work creation process](screenshots/screenshot2.png?raw=true)
+![Screenshot of help window](screenshots/screenshot3.png?raw=true)
+![Screenshot of work page](screenshots/screenshot4.png?raw=true)
+![Screenshot of writing window](screenshots/screenshot5.png?raw=true)
+![Screenshot of edit window](screenshots/screenshot6.png?raw=true)
+
 ## License and Copyright Info
 License: GNU GPL v3.0
+
 <a href="https://www.flaticon.com/free-icons/quill" title="quill icons">Quill icons created by Freepik - Flaticon</a>
